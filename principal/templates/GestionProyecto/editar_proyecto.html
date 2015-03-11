@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block contenido %}
+	<div class="page-wrapper">
+		{% if messages %}
+        		<div class="row">
+        			<div class="col-md-6">
+        				{% for message in messages %}
+					    	<p{% if message.tags == "success" %} class="alert alert-success" {% elif message.tags == "error" %} class="alert alert-error"{% endif %}>{{ message }}</p>
+					    {% endfor %}
+        			</div>
+        		</div>
+        		{% endif %}
+		<form method="POST">
+		<div class='row'>
+			<div class='col col-md-6'>
+				{% csrf_token%}
+				{% bootstrap_form form  %}
+			</div>
+			
+			
+			<div class='col col-md-6'>
+				<br>
+				<div class="panel panel-info">
+					
+					<div class="panel panel-heading">Artículos</div>
+					<div class="panel panel-body">
+						<ul>
+						{%for pdf in lista%}
+							 <li><a href= "/home/administrador/ManejoVigtech/ArchivosProyectos/{{user}}.{{proyecto}}/{{ pdf }} " target="_blank">{{ pdf }} </a></li>
+						{%endfor%}
+						</ul>
+					</div>
+				</div>
+			</div>
+		
+		
+		</div>
+		<div class='row'>
+			<div class='col col-md-4'>
+				<input type="submit" class="btn btn-lg btn-primary" value="Editar"/>
+			</div>
+		</div>
+		</form>		
+
+	</div>
+
+{%endblock%}

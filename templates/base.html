@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Vigtech</title>
+
+    
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+
+    <!-- MetisMenu CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/metisMenu/metisMenu.min.css">
+
+     <!-- Timeline CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/timeline.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/sb-admin-2.css">
+
+    <!-- Morris Charts CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/morris.css">
+
+    <!-- Custom Fonts -->
+    <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% load bootstrap3 %}
+</head>
+<body>
+    <div id="wrapper">
+        <!--Navegacion -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background:white;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'home' %}" style="margin: 0px; padding: 0px"><img src="{{STATIC_URL}}img/banner2.jpg"/>
+                <!--<h2 style="margin: 0px; padding: 0px" >Vigtech</h2>--></a>
+            </div>
+
+                <ul class="nav navbar-top-links navbar-right">
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i> {{user.username}} <i class="fa fa-caret-down"></i>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-user" style="float:right;">
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
+                            </li>
+                            <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            </li>
+                            -->
+                            <li class="divider"></li>
+                            <!-- Logout...Mandar a  Login-->
+                            <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                    <!-- /.dropdown-user -->
+                    </li> 
+
+
+                </ul>
+            
+        <!-- Panel izquierdo de navegacion-->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="menu">
+                        <li class="activate">
+                            <!-- Panel principal de trabajo -->
+                            <a class="active" href="{% url 'home' %}"><i class="fa fa-dashboard fa-fw"></i> Principal</a>
+                        </li>
+
+                        <li >
+                            
+                            <a href="#"><i class="fa fa-briefcase fa-fw"></i> Gestión de Proyectos <span class="fa arrow"></span></a>
+                            <!-- Nuevos Items desplegables -->
+                            <!--<ul class="nav nav-second-level" >-->
+                            <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
+                            
+                                <li><a href="{% url 'crear_proyecto' %}"><i class="fa fa-plus-square-o fa-fw"></i>Crear Proyecto</a></li>
+                                <li><a href="#"><i class="fa fa-trash-o fa-fw"></i>Eliminar Proyecto</a></li>
+                                <li><a href="{% url 'ver_mis_proyectos'%}"><i class="fa fa-list-ul fa-fw"></i>Mis Proyectos</a></li>
+                                <li><a href="{% url 'ver_otros_proyectos'%}"><i class="fa fa-ellipsis-h fa-fw"></i>Otros Proyectos</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                        <!-- Aprendizaje de maquina -->
+                        <li class=""> 
+                             <a href="{% url 'busqueda_navegacion'%}"><i class="fa fa-globe fa-fw"></i> Búsqueda y Navegación</a>
+                        </li>
+                        <li class="">
+                             <a href="{% url 'analisis' %}"><i class="fa fa-bar-chart-o fa-fw"></i> Análisis</a>
+                             
+                        </li>
+                        <li class="">
+                        <a href="#"><i class="fa fa-group fa-fw"></i>Visualización</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </nav>
+        <div id="page-wrapper">
+            {% block contenido %}
+            {% endblock %}
+        </div>
+
+    </div>
+
+
+
+    <script src="{{STATIC_URL}}js/jquery.js"></script>
+    <!--<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>-->
+
+
+
+        <!-- Bootstrap Core JavaScript -->
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+    <script src="{{STATIC_URL}}js/plugins/metisMenu/metisMenu.min.js"></script>
+    <script>
+    $(function () {
+        // body...
+          $('#menu').metisMenu();
+    });
+
+    </script>
+
+        <!-- Morris Charts JavaScript -->
+    <!--<script src="{{STATIC_URL}}/plugins/morris/raphael.min.js"></script>-->
+   <!-- <script src="{{STATIC_URL}}js/plugins/morris/morris.min.js"></script>-->
+   <!-- <script src="{{STATIC_URL}}js/plugins/morris/morris-data.js"></script>-->
+
+        <!-- Custom Theme JavaScript -->
+    <script src="{{STATIC_URL}}js/sb-admin-2.js"></script>
+
+    {% block js %}
+    {% endblock %}
+</body>
+</html>

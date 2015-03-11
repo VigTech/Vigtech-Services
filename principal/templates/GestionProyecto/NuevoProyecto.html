@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block contenido %}
+	<div class="page-wraper">
+		<div class="row">
+			<div class="col-lg-12">
+            	<h1 class="page-header"><i class="fa fa-file-o">Nuevo Proyecto</i>
+            	 <!--<a href="{% url 'login' %}"><i style="float:right;"class="fa fa-home" align="right"></a></i></h1>
+                 -->
+
+        	</div>
+        	<div class="col-md-8">
+        		{% if messages %}
+        		<div class="row">
+        			<div class="col-xs-12">
+        				{% for message in messages %}
+					    	<p{% if message.tags == "success" %} class="alert alert-success"{% endif %}>{{ message }}</p>
+					    {% endfor %}
+        			</div>
+        		</div>
+        		{% endif %}
+	        	<form method="POST">
+	        		{% csrf_token %}
+	        		{% bootstrap_form form %}
+	        		<div class="row">
+		        		<div class="col-md-12">	
+		        			<div class="panel panel-primary">
+				        		<div class="panel-heading">
+				        			Búsqueda
+				        		</div>
+				        		<div class="panel-body">
+				        			<ul class="nav nav-tabs">
+			                            <li class="active"><a href="#basica" data-toggle="tab">Búsqueda Básica</a>
+			                            </li>
+			                            <li><a href="#avanzada" data-toggle="tab">Búsqueda avanzada</a>
+			                            </li>
+			                        </ul>
+
+			                        <div class="tab-content">
+			                        	<div class="tab-pane fade in active" id="basica">
+			                        		<p></p>
+			                        		<p><input class="form-control" placeholder="¿Qué deseas buscar?" name= "fraseB"id='fraseB' size="50"/></p>
+			                        	</div>
+
+			                        	<div class="tab-pane fade" id="avanzada">
+			                        		<fieldset>
+												<legend>Encontrar Aritculos:</legend>
+												Con <strong>todas</strong> las palabras<br>
+												<input class="form-control" name='words' id="words" size="50"/>
+												<br>
+												Con la <strong>frase exacta</strong>
+												<br>
+												<input class="form-control" name="fraseA" id="fraseA" size="50"/>
+												<br>
+												Escritos por <strong>(Autor)</strong>
+												<br>
+												<input class="form-control" type="text" name="autor" id="autor" size="50"/>
+												<br>
+												
+												Escritos entre
+												
+												<input type="year" placeholder="Desde" name="before" id="before" size="10">---<input type="year" placeholder="Hasta" name="after"  id="after" size="10">
+												<br><br>
+											</fieldset>
+			                        	</div>
+			                        </div>
+				        		</div>
+				        	</div>
+			        	</div>
+			        </div> 
+	        		<input type="submit" class="btn btn-primary btn-lg btn-block" value="Crear Proyecto" onclick="$('#load').show();" />
+	        		<br><br>
+	        		<div  id='load'class='modal' align="center" style="display:none;">
+						<img src='{{STATIC_URL}}img/712.GIF' id='loading_image' alt="">
+					</div>
+				</form>
+			</div>
+		</div>
+		<p></p>
+	</div>
+{% endblock %}
+
+{% block scripts%}
+<script type="text/javascript">
+	
+	function validar(){
+		var words=document.getElementById("words").value;
+		var fraseA=document.getElementById("fraseA").value;
+		var fraseB=document.getElementById("fraseB").value;
+		var autor=document.getElementById("autor").value;
+		var after= document.getElementById("after").value;
+		var before= document.getElementById("before").value;
+		var valor=0
+		if fraseB != ""{
+			return true;
+		}else {
+
+			if(words != ""){
+				valor++;
+			}
+			if(fraseA !=""){
+				valor++;
+			}
+			if(autor !=""){
+				valor++;
+			}
+
+			console.log(valor);
+			if (valor>0){
+				//alert("GOOD!!")
+				return true;
+			
+			}
+
+			else{
+				alert("Necesita un criterio de búsqueda");
+				return false;
+			}
+
+		}
+		
+		
+
+
+
+	}
+
+
+</script>
+{% endblock%}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Registrar Usuario</title>
+
+    
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+
+    <!-- MetisMenu CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/metisMenu/metisMenu.min.css">
+
+     <!-- Timeline CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/timeline.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/sb-admin-2.css">
+
+    <!-- Morris Charts CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/morris.css">
+
+    <!-- Custom Fonts -->
+    <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+   {% load bootstrap3 %}
+
+ </head>
+
+<body style="background-color:white;">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background:white;">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'home' %}" style="margin: 0px; padding: 0px"><img src="{{STATIC_URL}}img/banner2.jpg"/>
+                <!--<h2 style="margin: 0px; padding: 0px" >Vigtech</h2>--></a>
+            </div>
+    </nav>
+
+	<div class="page-wrapper" style="margin-left:50px; margin-right:50px; background-color:white;">
+		<div class="row">
+			<div class="col-lg-12">
+            	<h1 class="page-header"><i class="fa fa-user">Crear Usuario</i></h1>
+
+        	</div>
+        	<div class="col-md-4">
+	        	<form method="POST">
+	        		{% csrf_token %}
+	        		{% bootstrap_form form  %}
+	        	<input type="submit" class="btn btn-primary" value="Guardar Usuario"/>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

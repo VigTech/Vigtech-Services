@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block contenido %}
+	<div class="page-wrapper">
+		<div class='row'>
+			<div class='col col-lg-12'>
+				<h1 class="page-header">Búsqueda y Navegación</h1>
+
+			</div>
+
+		</div>
+		<div class= "row">
+			<div class="col col-lg-8">
+				<ul class="nav nav-tabs">
+			       	<li class="active"><a href="#Buscador" data-toggle="tab">Buscador</a></li>
+			       	<li><a href="#avanzada" data-toggle="tab">Otros</a></li>
+              </ul>
+				<div class="tab-content">
+				     <div class="tab-pane fade in active" id="Buscador">
+				        <p></p>
+				        <form  method='GET' enctype='multipart/form-data' action="/gestionbusqueda/Resultados/"> 
+				        	{% csrf_token %}
+					        <p><input class="form-control" placeholder="¿Qué deseas buscar?" name= "busquedaIR"id='busquedaIR' size="50"/></p>
+					        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Buscar"/>
+					        <div>
+					        			
+					        		{%for resultado in resultados.Search%}
+					        			<h1>{{resultado.title}}</h1>
+					        			<p>{{resultado.path}}</p>
+					        			<p>{{resultado.frag}}</p>
+					        			<br>
+					        		{%endfor%}
+					        	
+					        <div> 
+					    </form>
+				     </div>
+				     <div class="tab-pane fade" id="avanzada">
+				     </div>
+				</div>
+			</div>	
+
+	</div>
+
+
+{%endblock%}

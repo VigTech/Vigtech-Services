@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block contenido %}
+	<div class="page-wrapper">
+		<br><br>
+		<div class='row'>
+			<div class='col col-md-6'>
+				{% csrf_token%}
+				{% bootstrap_form form  %}
+			</div>
+			
+		</div>
+	</div>
+
+{%endblock%}
