@@ -19,9 +19,8 @@
 								<thead>
 									<tr>
                                         <th>Nombre</th>
-                                        <th>Calificación Actual</th>
-                                        <th>Disponibilidad</th>
-                                        
+                                        <th>Funciones</th>
+                                                                                
                                     </tr>
 
 								</thead>
@@ -29,8 +28,7 @@
 									{% for proyecto in proyectos%}
 										<tr>
 											<td><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}">{{proyecto.nombre}}</a></td>
-											<td>{{proyecto.calificacion}}</td>
-											<td>{{proyecto.disponibilidad}} 
+											
 										</tr>
 									{% endfor %}
 

@@ -8,11 +8,11 @@ class Descarga:
 		self.url = "http://api.elsevier.com/content/search/scopus"
 		self.consulta = self.codificar_a_url("heart")
 		self.parametros = "&view=COMPLETE&httpAccept=application/xml&apiKey=b50e60b193e884e6d78948e916d816a0&count=100"
-	def __init__(self, query, start = 1):
+	def __init__(self, query, start = 0):
 		self.url = "http://api.elsevier.com/content/search/index:scopus"
 		self.consulta = self.codificar_a_url(query)
 		self.raw_consulta = query
-		self.parametros = "&view=COMPLETE&httpAccept=application/xml&apiKey=b50e60b193e884e6d78948e916d816a0&count=100&start="+str(start)
+		self.parametros = "&view=COMPLETE&httpAccept=application/xml&apiKey=b50e60b193e884e6d78948e916d816a0&count=20&start="+str(start)
 		self.construir_peticion()
 	#Construye, a partir de los atributos de la clase, la url para hacer la peticion a scopus
 	def buscar_por_doi(self):

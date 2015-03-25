@@ -6,8 +6,7 @@ class Red:
     '''La clase representa una red que se construye a partir de listas.
     '''
     def __init__(self, conjuntos, nombre, etiquetas_nodos = None):
-        #self.grafo, 
-        self.nombre_punto_net = self.construir_red_autocorrelacion(conjuntos, nombre, self.contar_coincidencias, etiquetas_nodos)
+        self.grafo, self.nombre_punto_net = self.construir_red_autocorrelacion(conjuntos, nombre, self.contar_coincidencias, etiquetas_nodos)
 
 
     def construir_red_autocorrelacion(self, conjuntos, nombre, contar_coinc, etiquetas_nodos):
@@ -33,8 +32,7 @@ class Red:
                     print(i,j,"  ",coinc)
                     red.write(str(i+1)+" "+str(j+1)+" "+str(coinc)+"\n")
         red.close()
-        #return igraph.read(nombre+".net",format="pajek"), 
-        return red.name
+        return igraph.read(nombre+".net",format="pajek"), red.name
     def contar_coincidencias(self, conjunto_1, conjunto_2):
         coincidencias = 0
         for elemento_en_1 in conjunto_1:
@@ -69,34 +67,29 @@ class Red:
         for i in range(cant_vertices):
             autor = punto_net.readline().rstrip().split(' "')
             id = autor[0]
-            name = autor[1].replace('"','')
-            #nodos.append("{"name": "'+name+', "size": tamanio, "id": '+id+'}")
-            nodos.append({"name": name, "size": 'tamanio', "id": str(id)})
+            name = autor[1]
+            nodos.append('{"name": "'+name+', "size": tamanio, "id": '+id+'},')
         #Para saltarse la línea que dice "edges" en el .net
         punto_net.readline()
         for arista in punto_net:
-			arista = arista.rstrip().split(' ')
-			origen = arista[0]
-			destino = arista[1]
-			peso = arista[2]
-			tamanos[int(origen)-1] += int(peso)
-			tamanos[int(destino)-1] += int(peso)
-            #aristas.append('{"source": '+origen+', "target": '+destino+', "strength": '+peso+'},')
-			aristas.append({"source": origen, "target": destino, "strength": peso})
-            
+            arista = arista.rstrip().split(' ')
+            origen = arista[0]
+            destino = arista[1]
+            peso = arista[2]
+            tamanos[int(origen)-1] += int(peso)
+            tamanos[int(destino)-1] += int(peso)
+            aristas.append('{"source": '+origen+', "target": '+destino+', "strength": '+peso+'},')
         #Volver al inicio del .net
         punto_net.seek(0)
         #Saltarse la línea que especifica la cantidad de vértices
         punto_net.readline()
         for i in range(cant_vertices):
-            #nodos[i] = nodos[i].replace('tamanio', str(tamanos[i]))
-            nodos[i]["size"] = tamanos[i]
-            
+            nodos[i] = nodos[i].replace('tamanio', str(tamanos[i]))
         punto_net.seek(0)
 
         print tamanos
-        return nodos, aristas
-        #return sum_lista_strings(nodos), sum_lista_strings(aristas)
+        print sum_lista_strings(nodos)
+        print sum_lista_strings(aristas)
 
 def sum_lista_strings(lista):
     string_completa= ''
@@ -146,4 +139,4 @@ def main():
     # visual_style["margin"] = 20
     # igraph.plot(r.grafo,'autoresNUEVoo.pdf', **visual_style)
 
-#main()
+main()

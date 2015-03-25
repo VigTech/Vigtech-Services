@@ -18,7 +18,7 @@ class proyecto(models.Model):
 	id_proyecto=models.AutoField(primary_key=True)
 	nombre=models.CharField(max_length=200, db_column="nombre_proyecto")
 	idUsuario=models.ForeignKey(User, db_column="fk_usuario")
-	calificacion=models.IntegerField()
+	#calificacion=models.IntegerField()
 	fraseBusqueda= models.CharField(max_length=200, db_column="busqueda")
 	#disponibilidad= models.CharField(max_length=200, db_column="disponibilidad", choices=disponibilidad_choices)
 	resumen=models.TextField(max_length=599, db_column='resumen')

@@ -14,12 +14,17 @@ from administradorConsultas import AdministradorConsultas
 from manejadorArchivos import obtener_autores
 from red import Red
 import igraph
+import json
+import django.utils
 
 # sys.setdefaultencoding is cancelled by site.py
 reload(sys)    # to re-enable sys.setdefaultencoding()
 sys.setdefaultencoding('utf-8')
 # Create your views here.
 #@login_required
+
+ruta="/home/administrador/ManejoVigtech/ArchivosProyectos/"
+
 class home(TemplateView):
 	template_name="home.html"
 
@@ -52,7 +57,7 @@ def nuevo_proyecto(request):
 			articulos={}
 			modelo_proyecto=form.save(commit=False)
 			modelo_proyecto.idUsuario=request.user
-			modelo_proyecto.calificacion=5
+			#modelo_proyecto.calificacion=5
 			modelo_proyecto.fraseBusqueda=busqueda
 			modelo_proyecto.save()
 			
@@ -171,20 +176,8 @@ def analisisView(request):
 		lista_autores.append(diccionario_autores[autor])
 		lista_nombres.append(autor)
 	r=Red(lista_autores, 'autores3', lista_nombres)
-    #r.grafo.write_svg('autores4.svg')
-	layout = r.grafo.layout("kk")
-    #igraph.plot(r.grafo,'autoresCircle.pdf', layout=layout, )
-
-	visual_style = {}
-	visual_style["vertex_size"] = 1
-    #visual_style["vertex_color"] = [color_dict[gender] for gender in g.vs["gender"]]
-    #visual_style["vertex_label"] = g.vs["name"]
-	visual_style["edge_width"] = 0.1
-	visual_style["layout"] = layout
-	visual_style["bbox"] = (300, 300)
-	visual_style["margin"] = 20
-	igraph.plot(r.grafo,'autoresNUEVoo.svg', **visual_style)
-	red = 'autoresNUEVoo.svg'
-	print "Hola mundo"
-	#return render(request, "GestionAnalisis/Analisis.html")
-	return render(request, "home.html")
+	nodos, aristas = r.generar_json()
+	nodos1=json.dumps(nodos)
+	aristas1= json.dumps(aristas)
+	#return render(request, "GestionAnalisis/Analisis.html", {"nodos":nodos, "aristas":aristas})
+	return render(request, "GestionAnalisis/Analisis.html", {"nodos":nodos1, "aristas":aristas1})

@@ -18,8 +18,7 @@
 							<table class="table table-striped table-bordered table-hover" id="dataTables-example">
 								<thead>
 									<tr>
-                                        <th>Nombre</th>
-                                        <th>Calificación Actual</th>
+                                        <th>Nombre del Proyecto</th>
                                         <th>Usuario</th>
                                         
                                     </tr>
@@ -29,7 +28,6 @@
 									{% for proyecto in proyectos%}
 										<tr>
 											<td><a href="{% url 'ver_proyecto' proyecto.id_proyecto%}">{{proyecto.nombre}}</a></td>
-											<td>{{proyecto.calificacion}}</td>
 											<td>{{proyecto.idUsuario}}</td>
 										</tr>
 									{% endfor %}
