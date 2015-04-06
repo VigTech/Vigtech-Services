@@ -13,7 +13,9 @@ urlpatterns=patterns('',
 	url(r'^gestionproyectos/OtrosProyectos/$', 'principal.views.ver_otros_proyectos', name='ver_otros_proyectos'),
 	url(r'^gestionbusqueda/$', 'principal.views.busqueda_navegacion', name='busqueda_navegacion'),
 	url(r'^gestionbusqueda/Resultados/$', 'principal.views.buscador', name="buscador"),
-	url(r'^gestionanalisis/$', 'principal.views.analisisView', name="analisis")
+	url(r'^gestionanalisis/$', 'principal.views.analisisView', name="analisis"),
+	url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+
 # url(r'^home/$' ,'buscador.views.indexarArchivos', name='indexar'),
 
 

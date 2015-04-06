@@ -95,7 +95,7 @@ def moveFiles(nombreProyecto, user, articulosScholar, articulosScopus):
 			preName=str(files).replace(" ","\\ ")
 			os.system("mv -f " + preName + " " + rutaProyecto+"/" )
 			'''
-	os.system("mv " + rutaProyecto + "/" + " /home/administrador/ManejoVigtech/ArchivosProyectos/")		
+	os.system("mv " + rutaProyecto + "/" + " /home/administrador/ManejoVigtech/media/")		
 	
 	#os.system("mv " + rutaProyecto+ "/" + " static/"+rutaProyecto+"/")
 	
@@ -137,7 +137,7 @@ def busqueda (consulta):
 		raise e
 def crearListaDocumentos(id_proyecto, user):
 	#archivo= open("static/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "r")
-	archivo= open("/home/administrador/ManejoVigtech/ArchivosProyectos/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "r")
+	archivo= open("/home/administrador/ManejoVigtech/media/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "r")
 	lista = []
 	for linea in archivo:
 		lista.append(linea.rstrip())
@@ -154,7 +154,7 @@ def escribir_archivo_documentos(id_proyecto, user, articulosScholar, articulosSc
 			lista.append(art + ".pdf")	
 	lista=set(lista)
 	#pdfs = open("static/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "w")
-	pdfs = open("/home/administrador/ManejoVigtech/ArchivosProyectos/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "w")
+	pdfs = open("/home/administrador/ManejoVigtech/media/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "w")
 	for pdf in lista:
 		if pdf is not None:
 			pdfs.write(pdf+'\n')
