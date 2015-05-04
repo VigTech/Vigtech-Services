@@ -82,6 +82,7 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_collected') 
 
+#Cambiar a la ruta del nuevo host
 MEDIA_ROOT="/home/administrador/ManejoVigtech/media/"
 #MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 MEDIA_URL = 'media/'

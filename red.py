@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import igraph
+#import igraph
 from manejadorArchivos import leer_archivo, obtener_autores
 
 class Red:
