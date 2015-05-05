@@ -13,6 +13,7 @@ import sys
 from administradorConsultas import AdministradorConsultas
 from manejadorArchivos import obtener_autores
 from red import Red
+from Logica import ConsumirServicios
 # import igraph
 import json
 import django.utils
@@ -68,10 +69,11 @@ def nuevo_proyecto(request):
 
             funciones.CrearDirectorioProyecto(modelo_proyecto.id_proyecto, request.user)
             if fraseB != "":
-                articulos = funciones.buscadorSimple(fraseB)
-                ac = AdministradorConsultas()
-                ac.descargar_papers(fraseB)
-                lista_scopus = ac.titulos_descargas
+                articulos = ConsumirServicios.consumir_scholar(fraseB, request.user, modelo_proyecto.id_proyecto )
+                #articulos = funciones.buscadorSimple(fraseB)
+                #ac = AdministradorConsultas()
+                #ac.descargar_papers(fraseB)
+                #lista_scopus = ac.titulos_descargas
 
             #if fraseA != "" or autor != "" or words != "":
             #    articulos = funciones.buscadorAvanzado(fraseA, words, autor, after, before)
@@ -82,8 +84,8 @@ def nuevo_proyecto(request):
 
             #print str(modelo_proyecto.id_proyecto)
 
-            funciones.moveFiles(modelo_proyecto.id_proyecto, request.user, articulos, lista_scopus)
-            funciones.escribir_archivo_documentos(modelo_proyecto.id_proyecto, request.user, articulos, lista_scopus)
+            #funciones.moveFiles(modelo_proyecto.id_proyecto, request.user, articulos, lista_scopus)
+            #funciones.escribir_archivo_documentos(modelo_proyecto.id_proyecto, request.user, articulos, lista_scopus)
             messages.success(request, "Se ha creado exitosamente el proyecto")
             return redirect('crear_proyecto')
         else:

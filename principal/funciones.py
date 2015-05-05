@@ -3,7 +3,7 @@ import os
 import json
 import urllib
 
-
+REPOSITORY_DIR = '/home/vigtech/shared/repository/'
 def buscadorSimple(frase):
     # nombre_directorio=str(id_user)+ "."+ str(id_proyecto)
     querier = scholar.ScholarQuerier()
@@ -113,7 +113,7 @@ def CrearDirectorioProyecto(nombreProyecto, user):
     nombreDirectorio = str(user) + "." + str(nombreProyecto)
     # Creacion de directorios de proyectos.
     #Ruta en el host
-    os.mkdir(nombreDirectorio, 0755)
+    os.mkdir(REPOSITORY_DIR+nombreDirectorio, 0755)
 
 
 # os.system("mkdir /home/administrador/ManejoVigtech/ArchivosProyectos/ " + nombreDirectorio)
@@ -140,8 +140,8 @@ def busqueda(consulta):
 
 
 def crearListaDocumentos(id_proyecto, user):
-    #archivo= open("static/"+str(user)+"."+str(id_proyecto)+"/"+"docs.txt", "r")
-    archivo = open("/home/administrador/ManejoVigtech/media/" + str(user) + "." + str(id_proyecto) + "/" + "docs.txt",
+
+    archivo = open(REPOSITORY_DIR + str(user) + "." + str(id_proyecto) + "/" + "docs.txt",
                    "r")
     lista = []
     for linea in archivo:
@@ -164,13 +164,3 @@ def escribir_archivo_documentos(id_proyecto, user, articulosScholar, articulosSc
     for pdf in lista:
         if pdf is not None:
             pdfs.write(pdf + '\n')
-
-
-#buscadorSimple("Hello World")
-#("","Named Entity Reo","", "","")
-
-#import os
-#for file in os.listdir("/mydir"):
-#    if file.endswith(".txt"):
-#        print(file)
-
