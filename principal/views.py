@@ -70,6 +70,8 @@ def nuevo_proyecto(request):
             funciones.CrearDirectorioProyecto(modelo_proyecto.id_proyecto, request.user)
             if fraseB != "":
                 articulos = ConsumirServicios.consumir_scholar(fraseB, request.user.username, str(modelo_proyecto.id_proyecto ))
+		articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto))
+ 
                 #articulos = funciones.buscadorSimple(fraseB)
                 #ac = AdministradorConsultas()
                 #ac.descargar_papers(fraseB)
