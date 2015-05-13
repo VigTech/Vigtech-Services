@@ -69,7 +69,8 @@ def nuevo_proyecto(request):
 
             funciones.CrearDirectorioProyecto(modelo_proyecto.id_proyecto, request.user)
             if fraseB != "":
-                articulos = ConsumirServicios.consumir_scholar(fraseB, request.user, modelo_proyecto.id_proyecto )
+                articulos = ConsumirServicios.consumir_scholar(fraseB, request.user.username, str(modelo_proyecto.id_proyecto) )
+                articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto))
                 #articulos = funciones.buscadorSimple(fraseB)
                 #ac = AdministradorConsultas()
                 #ac.descargar_papers(fraseB)
@@ -169,8 +170,11 @@ def ver_proyecto(request, id_proyecto):
 @login_required
 def buscador(request):
     if request.method == 'GET':
+        IR = ConsumirServicios.IR()
         fraseBusqueda = request.GET.get("busquedaIR")
-        data = funciones.busqueda(fraseBusqueda)
+        #IR.consultar(fraseBusqueda,"","")
+
+        data = IR.consultar()
         print data
         print fraseBusqueda
     else:
