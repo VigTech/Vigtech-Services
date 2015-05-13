@@ -27,7 +27,13 @@
 								<tbody>
 									{% for proyecto in proyectos%}
 										<tr>
-											<td><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}">{{proyecto.nombre}}</a></td>
+											<td width="15%"><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}">{{proyecto.nombre}}</a>
+
+                                            </td>
+                                            <td width="10%">
+                                                <btn class="btn btn-danger btn-sm" title="Eliminar Proyecto" onclick="location.href='{% url 'eliminar_proyecto' proyecto.id_proyecto %}'"'><span class="glyphicon glyphicon-remove-circle"></span></btn>
+
+                                                 </td>
 											
 										</tr>
 									{% endfor %}
@@ -41,5 +47,27 @@
 			</div>
 		</div>
     </div>
+    <script>
+    /*
+        function eliminar_proyecto(theurl) {
+      bootbox.dialog({
+        message:"¿Está seguro de que desea eliminar este proyecto?",
+        title:"Confirmar eliminar",
+        onEscape: function() {},
+        buttons: {
+          "Aceptar": {
+            className:'btn-danger',
+            callback: function(){
+              window.location = theurl;
+            },
+          },
+          'Cancelar':{
+            className:'btn-default'
+          }
+        }
+      })
 
+  }
+*/
+    </script>
 {% endblock %}

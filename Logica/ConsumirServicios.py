@@ -2,6 +2,7 @@
 __author__ = 'andres'
 import json
 from urllib2 import urlopen, quote, Request
+import urllib
 
 
 def consumir_scholar(consulta, user, proyecto):
@@ -33,7 +34,7 @@ def consumir_scopus(consulta, user, proyecto):
     data = json.load(response)
     print response.read()
 
-    
+
 class IR:
     # Acceso a Servicio Web de IR, realizar búsqueda sobre documentos indexados <GET>
 
@@ -52,7 +53,13 @@ class IR:
         return data
     # Indexación de documentos <POST>
     def indexar(self, user, proyecto):
-        server = "http://192.168.28.103:8085/vigtech-ir/indexes/" + str(user) + "." + str(proyecto)
-        response = urlopen(server)
+        proyectopath= quote(str(user) + "." + str(proyecto))
+        server = "http://10.0.0.7:8085/vigtech-ir/indexes/" + proyectopath
+        #print server
+        values=urllib.urlencode({})
+        req = Request(server,values)
+        response = urlopen(req)
 
 
+#ir = IR()
+#ir.indexar("admin", "4");

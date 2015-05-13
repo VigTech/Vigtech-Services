@@ -148,6 +148,8 @@ def crearListaDocumentos(id_proyecto, user):
         lista.append(linea.rstrip())
     return lista
 
+def eliminar_proyecto(id_proyecto, user):
+    os.system("rm -rf " + REPOSITORY_DIR + str(user) + "." + str(id_proyecto))
 
 def escribir_archivo_documentos(id_proyecto, user, articulosScholar, articulosScopus):
     lista = []

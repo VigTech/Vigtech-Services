@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.template import RequestContext
+from models import proyecto
 from .forms import *
 import funciones
 import sys
@@ -174,9 +175,9 @@ def buscador(request):
     if request.method == 'GET':
         IR = ConsumirServicios.IR()
         fraseBusqueda = request.GET.get("busquedaIR")
-        #IR.consultar(fraseBusqueda,"","")
-
-        data = IR.consultar()
+        # IR.consultar(fraseBusqueda,"","")
+        #data = IR.consultar()
+        data = funciones.busqueda(fraseBusqueda)
         print data
         print fraseBusqueda
     else:
@@ -199,3 +200,11 @@ def analisisView(request):
     aristas1 = json.dumps(aristas)
     #return render(request, "GestionAnalisis/Analisis.html", {"nodos":nodos, "aristas":aristas})
     return render(request, "GestionAnalisis/Analisis.html", {"nodos": nodos1, "aristas": aristas1})
+
+@login_required
+def eliminar_proyecto(request, id_proyecto):
+    user = request.user
+    project = get_object_or_404(proyecto, id_proyecto=id_proyecto)
+    funciones.eliminar_proyecto(id_proyecto, user)
+    project.delete()
+    return redirect("index")
