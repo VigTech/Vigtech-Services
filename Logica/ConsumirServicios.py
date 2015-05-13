@@ -33,7 +33,7 @@ def consumir_scopus(consulta, user, proyecto):
     data = json.load(response)
     print response.read()
 
-
+    
 class IR:
     # Acceso a Servicio Web de IR, realizar búsqueda sobre documentos indexados <GET>
 
