@@ -14,7 +14,7 @@ import sys
 from administradorConsultas import AdministradorConsultas
 from manejadorArchivos import obtener_autores
 from red import Red
-from Logica import ConsumirServicios
+from Logica import ConsumirServicios, procesamientoScopusXml
 # import igraph
 import json
 import django.utils
@@ -70,9 +70,23 @@ def nuevo_proyecto(request):
 
             funciones.CrearDirectorioProyecto(modelo_proyecto.id_proyecto, request.user)
             if fraseB != "":
+                try:
+                    """
+                        Descarga de documentos de Google Scholar y Scopus
+                    """
+                    articulos = ConsumirServicios.consumir_scholar(fraseB, request.user.username, str(modelo_proyecto.id_proyecto) )
+                    articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto))
+                    """
+                       Conexión con base datos para insertar metadatos de paper de Scopus
+                    """
+                    busqueda = open("/home/vigtech/shared/repository/"+ str(request.user.username)
+                                    + "." + str(modelo_proyecto.id_proyecto) + "/busqueda.xml")
+                    procesamientoScopusXml.xml_to_bd(busqueda)
+                    messages.success(request, "Se ha creado exitosamente el proyecto")
+                except:
+                    messages.error(request, "Hubo un problema en la descarga")
 
-                articulos = ConsumirServicios.consumir_scholar(fraseB, request.user.username, str(modelo_proyecto.id_proyecto) )
-                articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto))
+
 
                 #articulos = funciones.buscadorSimple(fraseB)
                 #ac = AdministradorConsultas()
