@@ -81,6 +81,7 @@ def nuevo_proyecto(request):
                     """
                     busqueda = open("/home/vigtech/shared/repository/"+ str(request.user.username)
                                     + "." + str(modelo_proyecto.id_proyecto) + "/busqueda.xml")
+				
                     procesamientoScopusXml.xml_to_bd(busqueda)
                     messages.success(request, "Se ha creado exitosamente el proyecto")
                 except:

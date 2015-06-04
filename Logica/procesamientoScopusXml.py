@@ -49,7 +49,8 @@ def registrar(campito, paper, etiquetas_metadatos):
         if metadato == campito.tag:
             #print 'fue'
             #print campito.text
-            paper[nombre_meta] = campito.text.replace("'", " ").encode('utf-8')
+            if campito.text is not None:
+				paper[nombre_meta] = campito.text.replace("'", " ").encode('utf-8')
 
 def xml_to_bd(xml):
     etiquetas_paper = ['{http://purl.org/dc/elements/1.1/}title', '{http://purl.org/dc/elements/1.1/}description',

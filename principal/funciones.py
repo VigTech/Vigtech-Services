@@ -113,7 +113,8 @@ def CrearDirectorioProyecto(nombreProyecto, user):
     nombreDirectorio = str(user) + "." + str(nombreProyecto)
     # Creacion de directorios de proyectos.
     #Ruta en el host
-    os.mkdir(REPOSITORY_DIR+nombreDirectorio, 0755)
+    os.mkdir(REPOSITORY_DIR+nombreDirectorio, 0777)
+    os.chmod(REPOSITORY_DIR+nombreDirectorio, 0777)
 
 
 # os.system("mkdir /home/administrador/ManejoVigtech/ArchivosProyectos/ " + nombreDirectorio)

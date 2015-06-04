@@ -4,7 +4,7 @@ import psycopg2
 
 def run_query(query=''):
     #conn_string = "host='localhost' dbname='metaVigTech' user='postgres' password='chucho'"
-    conn_string = "host='127.0.0.1:32768' dbname='docker' user='docker' password='docker'"
+    conn_string = "host='127.0.0.1' dbname='docker' user='docker' password='docker' port='49153'"
     conn = psycopg2.connect(conn_string) # Conectar a la base de datos
     cursor = conn.cursor()         # Crear un cursor
     cursor.execute(query)          # Ejecutar una consulta
@@ -30,7 +30,7 @@ def select(tabla):
     return result
 
 def insertar_paper(paper, autores):#, revista, keywords, autores):
-    '''Inserta en la BD la información de un paper que viene en forma de listas para cada tabla de la BD
+    '''Inserta en la BD la informacion de un paper que viene en forma de listas para cada tabla de la BD
     '''
     #funcion_sql_ultimo_id = "SELECT currval('paper_id_seq');"
     #paper_query = "INSERT INTO paper (doi,titulo_paper, abstract, issn, fecha, revista_issn, total_citaciones) VALUES ('%s','%s','%s',%s,%s,%s,%s);"%(paper['doi'],paper['title'],paper['abstract'])
@@ -59,10 +59,10 @@ def insert_returning_id(dicci_tabla, nombre_tabla, identificador, campos_bd, cam
         id = lista_id_paper[0][0]
     else:
         string_campos = '%s,'*len(campos_bd)%tuple((campo for campo in campos_bd))
-        #eliminar último caracter por la coma
+        #eliminar ultimo caracter por la coma
         string_campos = string_campos[:-1]
         string_valores = "'%s',"*len(campos_bd)%tuple((dicci_tabla[campo] for campo in campos_xml))
-        #eliminar último caracter por la coma
+        #eliminar ultimo caracter por la coma
         string_valores = string_valores[:-1]
         paper_query = "INSERT INTO paper (%s) VALUES (%s) RETURNING id;"%(string_campos, string_valores)
         print paper_query
