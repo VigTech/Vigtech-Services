@@ -25,8 +25,9 @@ sys.setdefaultencoding('utf-8')
 # Create your views here.
 # @login_required
 
-ruta = "/home/administrador/ManejoVigtech/ArchivosProyectos/"
+#ruta = "/home/administrador/ManejoVigtech/ArchivosProyectos/"
 
+sesion_proyecto=None
 
 class home(TemplateView):
     template_name = "home.html"
@@ -76,6 +77,7 @@ def nuevo_proyecto(request):
                     """
                     articulos = ConsumirServicios.consumir_scholar(fraseB, request.user.username, str(modelo_proyecto.id_proyecto) )
                     articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto))
+
                     """
                        Conexión con base datos para insertar metadatos de paper de Scopus
                     """
@@ -83,6 +85,12 @@ def nuevo_proyecto(request):
                                     + "." + str(modelo_proyecto.id_proyecto) + "/busqueda.xml")
 				
                     procesamientoScopusXml.xml_to_bd(busqueda)
+
+                    """
+                        indexación
+                    """
+                    ir = ConsumirServicios.IR()
+                    ir.indexar(str(request.user.username),str(modelo_proyecto.id_proyecto))
                     messages.success(request, "Se ha creado exitosamente el proyecto")
                 except:
                     messages.error(request, "Hubo un problema en la descarga")
@@ -150,6 +158,8 @@ def busqueda_navegacion(request):
 @login_required
 def editar_proyecto(request, id_proyecto):
     model_proyecto = get_object_or_404(proyecto, id_proyecto=id_proyecto)
+    request.session['proyecto']= str(model_proyecto.id_proyecto)
+    print  "This is my project:",request.session['proyecto']
     #nombreDirectorioAnterior=model_proyecto.nombre
     lista = funciones.crearListaDocumentos(id_proyecto, request.user, )
     if request.method == 'POST':
@@ -188,11 +198,12 @@ def ver_proyecto(request, id_proyecto):
 @login_required
 def buscador(request):
     if request.method == 'GET':
-        IR = ConsumirServicios.IR()
+        ir = ConsumirServicios.IR()
+        
         fraseBusqueda = request.GET.get("busquedaIR")
         # IR.consultar(fraseBusqueda,"","")
-        #data = IR.consultar()
-        data = funciones.busqueda(fraseBusqueda)
+        data = ir.consultar(fraseBusqueda,str(request.user.username),request.session['proyecto'])
+        #data = funciones.busqueda(fraseBusqueda)
         print data
         print fraseBusqueda
     else:
@@ -202,6 +213,7 @@ def buscador(request):
 
 @login_required
 def analisisView(request):
+
     print 'hola'
     diccionario_autores = obtener_autores([open('busqueda.xml')])
     lista_autores = []
@@ -222,4 +234,4 @@ def eliminar_proyecto(request, id_proyecto):
     project = get_object_or_404(proyecto, id_proyecto=id_proyecto)
     funciones.eliminar_proyecto(id_proyecto, user)
     project.delete()
-    return redirect("index")
+    return redirect("ver_mis_proyectos")

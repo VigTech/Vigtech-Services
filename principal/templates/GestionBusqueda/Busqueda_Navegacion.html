@@ -24,10 +24,10 @@
 					        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Buscar"/>
 					        <div>
 					        			
-					        		{%for resultado in resultados.Search%}
+					        		{%for resultado in resultados%}
 					        			<h1>{{resultado.title}}</h1>
+					        			<p>{{resultado.fragment}}</p>
 					        			<p>{{resultado.path}}</p>
-					        			<p>{{resultado.frag}}</p>
 					        			<br>
 					        		{%endfor%}
 					        	

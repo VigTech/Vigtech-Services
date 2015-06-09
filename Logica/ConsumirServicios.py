@@ -53,16 +53,20 @@ class IR:
         return data
     # Indexación de documentos <POST>
     def indexar(self, user, proyecto):
-        proyectopath= quote(str(user) + "." + str(proyecto))
-        server = "http://localhost:8085/vigtech-ir/indexes/" + proyectopath
-        #print server
-        values=urllib.urlencode({})
-        req = Request(server,values)
-        response = urlopen(req)
+        try:
+            proyectopath= quote(str(user) + "." + str(proyecto))
+            server = "http://localhost:8085/vigtech-ir/indexes/" + proyectopath
+            #print server
+            values=urllib.urlencode({})
+            req = Request(server,values)
+            response = urlopen(req)
+            print "Indexar"
+        except:
+            print "Imposible realizar la indexacion" 
 
 
 #ir = IR()
-#ir.indexar("admin", "4");
+#ir.indexar("prueba", "1");
 #Hagamos un prueba en este archivo
 
 
