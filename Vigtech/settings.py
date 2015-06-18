@@ -64,11 +64,11 @@ WSGI_APPLICATION = 'Vigtech.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'vigtech',
-        'USER': 'vigtech',
-        'PASSWORD': 'vigtech',
+        'NAME': 'docker',
+        'USER': 'docker',
+        'PASSWORD': 'docker',
         'HOST':'localhost',
-        'PORT': '5432',
+        'PORT': '49153',
     }
 }
 

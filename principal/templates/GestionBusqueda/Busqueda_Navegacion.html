@@ -26,7 +26,7 @@
 					        			
 					        		{%for resultado in resultados%}
 					        			<h1>{{resultado.title}}</h1>
-					        			<p>{{resultado.fragment}}</p>
+					        			<p>{{resultado.fragment | safe}}</p>
 					        			<p>{{resultado.path}}</p>
 					        			<br>
 					        		{%endfor%}

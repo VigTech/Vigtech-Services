@@ -3,7 +3,7 @@
 import xml.etree.ElementTree as ET
 from conectarBD import insertar_paper
 
-def obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor):
+def obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor, etiquetas_afiliaciones):
     '''Guarda los datos de un xml en una base de datos
     Parámetros: Los nombres de los campos que son guardados en cada tabla'''
     respuesta = []
@@ -14,27 +14,39 @@ def obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor):
         paper = {}
         revista = {}
         autores = []
+        afiliaciones = []
         for campito in child:#.findall(campo):
             registrar(campito, paper, etiquetas_paper)
             registrar(campito, revista, etiquetas_revista)
-            registrar_autores(campito,autores,etiquetas_autor)
-            #print campito.text
-            #print campito.tag
+            registrar_autores(campito,autores,etiquetas_autor,'{http://www.w3.org/2005/Atom}author')
+            registrar_autores(campito,afiliaciones,etiquetas_afiliaciones,'{http://www.w3.org/2005/Atom}affiliation')
+            #print campito.tag, campito.text
+            #print paper
             respuesta.append(campito.text)
         #print revista
         print autores
+        #print paper
+        #print respuesta
         if(paper != {}):
-            insertar_paper(paper, autores)
+            insertar_paper(paper, autores, revista, afiliaciones)
     return respuesta
 
-def registrar_autores(campito, autores, etiquetas_autor):
-    tag_autor = '{http://www.w3.org/2005/Atom}author'
+def registrar_autores(campito, autores, etiquetas_autor,tag):
+    #print 'Hola'
+    tag_autor = tag
+    #print campito.tag, campito.text
     if campito.tag == tag_autor:
+        #print 'hola2'
+        #print autores
         autor = {}
         for meta_autor in campito:
             registrar(meta_autor, autor, etiquetas_autor)
-            autores.append(autor)
-            #print meta_autor.tag
+            #print autor
+            #print meta_autor.tag, meta_autor.text
+        autores.append(autor)
+            #print autor
+            #print autores
+
 
 def registrar(campito, paper, etiquetas_metadatos):
     '''Guarda en paper, un diccionario que contiene los datos de campito etiquetados con etiquetas_metadatos
@@ -61,9 +73,12 @@ def xml_to_bd(xml):
                          '{http://prismstandard.org/namespaces/basic/2.0/}issn']
     etiquetas_autor= ['{http://www.w3.org/2005/Atom}authid', '{http://www.w3.org/2005/Atom}authname',
                       '{http://www.w3.org/2005/Atom}afid']
+    etiquetas_afiliaciones=['{http://www.w3.org/2005/Atom}afid','{http://www.w3.org/2005/Atom}affilname',
+                           '{http://www.w3.org/2005/Atom}name-variant','{http://www.w3.org/2005/Atom}name-variant',
+                           '{http://www.w3.org/2005/Atom}affiliation-city','{http://www.w3.org/2005/Atom}affiliation-country']
 
-    obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor)
+    obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor, etiquetas_afiliaciones)
     return 0
 
-#xml_to_bd(open('xml0.xml'))
+#xml_to_bd(open('xml1.xml'))
 #main(open('xml0.xml'))

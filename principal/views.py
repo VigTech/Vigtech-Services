@@ -54,6 +54,9 @@ def nuevo_proyecto(request):
         words = request.POST.get('words')
         before = request.POST.get('before')
         after = request.POST.get('after')
+        limArxiv = request.POST.get('limArxiv')
+        limSco = request.POST.get('limSco')
+        print limArxiv, limSco
         #print fraseB
         #Formato de frase de busqueda
         #FraseBásica,Words,FraseA,autor,before,after
@@ -75,14 +78,15 @@ def nuevo_proyecto(request):
                     """
                         Descarga de documentos de Google Scholar y Scopus
                     """
+                    articulos_arxiv= ConsumirServicios.consumir_arxiv(fraseB, request.user.username, str(modelo_proyecto.id_proyecto), limArxiv)
                     articulos = ConsumirServicios.consumir_scholar(fraseB, request.user.username, str(modelo_proyecto.id_proyecto) )
-                    articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto))
+                    articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto), limSco)
 
                     """
                        Conexión con base datos para insertar metadatos de paper de Scopus
                     """
                     busqueda = open("/home/vigtech/shared/repository/"+ str(request.user.username)
-                                    + "." + str(modelo_proyecto.id_proyecto) + "/busqueda.xml")
+                                    + "." + str(modelo_proyecto.id_proyecto) + "/busqueda0.xml")
 				
                     procesamientoScopusXml.xml_to_bd(busqueda)
 
@@ -214,17 +218,10 @@ def buscador(request):
 @login_required
 def analisisView(request):
 
-    print 'hola'
-    diccionario_autores = obtener_autores([open('busqueda.xml')])
-    lista_autores = []
-    lista_nombres = []
-    for autor in diccionario_autores:
-        lista_autores.append(diccionario_autores[autor])
-        lista_nombres.append(autor)
-    r = Red(lista_autores, 'autores3', lista_nombres)
-    nodos, aristas = r.generar_json()
-    nodos1 = json.dumps(nodos)
-    aristas1 = json.dumps(aristas)
+    data = ConsumirServicios.consumir_red(request.user.username, request.session['proyecto'])
+    #nodos, aristas = r.generar_json()
+    nodos1 = json.dumps(data['nodes'])
+    aristas1 = json.dumps(data['links'])
     #return render(request, "GestionAnalisis/Analisis.html", {"nodos":nodos, "aristas":aristas})
     return render(request, "GestionAnalisis/Analisis.html", {"nodos": nodos1, "aristas": aristas1})
 
