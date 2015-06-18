@@ -83,18 +83,20 @@ def nuevo_proyecto(request):
                     articulos_scopus = ConsumirServicios.consumir_scopus(fraseB, request.user.username, str(modelo_proyecto.id_proyecto), limSco)
 
                     """
+                        indexación
+                    """
+                    ir = ConsumirServicios.IR()
+                    ir.indexar(str(request.user.username),str(modelo_proyecto.id_proyecto))
+
+                    """
                        Conexión con base datos para insertar metadatos de paper de Scopus
                     """
                     busqueda = open("/home/vigtech/shared/repository/"+ str(request.user.username)
                                     + "." + str(modelo_proyecto.id_proyecto) + "/busqueda0.xml")
 				
-                    procesamientoScopusXml.xml_to_bd(busqueda)
+                    procesamientoScopusXml.xml_to_bd(busqueda, modelo_proyecto.id_proyecto)
 
-                    """
-                        indexación
-                    """
-                    ir = ConsumirServicios.IR()
-                    ir.indexar(str(request.user.username),str(modelo_proyecto.id_proyecto))
+                    
                     messages.success(request, "Se ha creado exitosamente el proyecto")
                 except:
                     messages.error(request, "Hubo un problema en la descarga")

@@ -3,8 +3,8 @@ import psycopg2
 
 
 def run_query(query=''):
-    conn_string = "host='localhost' dbname='postgres' user='postgres' password='chucho'"
-    #conn_string = "host='127.0.0.1' dbname='docker' user='docker' password='docker' port='49153'"
+    #conn_string = "host='localhost' dbname='postgres' user='postgres' password='chucho'"
+    conn_string = "host='127.0.0.1' dbname='docker' user='docker' password='docker' port='49153'"
     conn = psycopg2.connect(conn_string) # Conectar a la base de datos
     cursor = conn.cursor()         # Crear un cursor
     cursor.execute(query)          # Ejecutar una consulta
@@ -29,7 +29,7 @@ def select(tabla):
     result = run_query(query)
     return result
 
-def insertar_paper(paper, autores, revista, afiliaciones):#, revista, keywords, autores):
+def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto):#, revista, keywords, autores):
     '''Inserta en la BD la informacion de un paper que viene en forma de listas para cada tabla de la BD
     '''
     #funcion_sql_ultimo_id = "SELECT currval('paper_id_seq');"
@@ -38,13 +38,15 @@ def insertar_paper(paper, autores, revista, afiliaciones):#, revista, keywords, 
     id_revista = insert_returning_id(revista, 'revista', 'issn', 'issn', 'issn', ['issn', 'titulo_revista'],
                                      ['issn', 'publicationName'])
     print 'hola'
-    id_paper = insert_returning_id(paper, 'paper', 'eid', 'eid', 'id', ['eid', 'titulo_paper', 'abstract','total_citaciones','fecha','doi'],
+    id_paper = insert_returning_id(paper, 'paper', 'eid', 'eid', 'id', ['eid', 'titulo_paper', 'abstract','total_citaciones',
+                                    'fecha','doi'],
                                    ['eid', 'title', 'description','citedby-count','coverDate','doi'])
 
 
     for afiliacion in afiliaciones:
-        id_afiliacion = insert_returning_id(afiliacion, 'afiliacion', 'afid', 'scopus_id', 'id', ['scopus_id', 'nombre', 'pais'],
-                                       ['afid', 'affilname', 'affiliation-country'])
+        id_afiliacion = insert_returning_id(afiliacion, 'afiliacion', 'afid', 'scopus_id', 'id',
+                                        ['scopus_id', 'nombre', 'pais','ciudad','variante_nombre'],
+                                        ['afid', 'affilname', 'affiliation-country','affiliation-city','name-variant'])
     for autor in autores:
         '''
         lista_id_autor = select_id('autor', 'id_scopus', autor['authid'])
@@ -65,8 +67,13 @@ def insertar_paper(paper, autores, revista, afiliaciones):#, revista, keywords, 
             id_aff = lista_id_aff[0][0]
             insert_relation('autor_afiliacion','autor_id','afiliacion_id',id_autor,id_aff)
 
+    for key in keywords:
+        id_key = insert_returning_id(key, 'keyword', 'authkeywords', 'keyword', 'id', ['keyword'],
+                                       ['authkeywords'])
 
+        insert_relation('paper_keyword', 'paper_id', 'keyword_id', id_paper, id_key)
 
+    insert_relation('paper_proyecto', 'id_paper', 'id_proyecto', id_paper, id_proyecto)
 
     #print type(paper_query)
     print id_paper
