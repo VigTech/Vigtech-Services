@@ -115,11 +115,53 @@
                              <a href="{% url 'busqueda_navegacion'%}"><i class="fa fa-globe fa-fw"></i> Búsqueda y Navegación</a>
                         </li>
                         <li class="">
-                             <a href="{% url 'analisis' %}"><i class="fa fa-bar-chart-o fa-fw"></i> Análisis</a>
+                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Análisis</a>
+                             <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
+                                <li>
+                                    <a href="{% url 'coautoria2' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'coautoria1' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria con medidas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'clustering' %}"><i class="fa fa-cube  fa-fw"></i>Clustering</a>
+                                </li>
+                             </ul>
                              
                         </li>
-                        <li class="">
-                        <a href="#"><i class="fa fa-group fa-fw"></i>Visualización</a>
+                        <li>
+
+                            <a href="#"><i class="fa fa-cube  fa-fw"></i>Estadísticas</a>
+                            <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
+                                <li>
+                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Indicadores básicos</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de barra</a>
+                                    <ul class="collapse-in nav nav-third-level" area-expanded="true" style="">
+                                    <li> <a href="{% url 'analisis_paises'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Paises</a></li>
+                                    <li> <a href="{% url 'analisis_autores'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Autores</a></li>
+                                    <li> <a href="{% url 'analisis_afiliaciones'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Afiliaciones</a></li>
+                                     <li> <a href="{% url 'analisis_revistas'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Revistas</a></li>
+                                    <li> <a href="{% url 'analisis_docsfechas'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Documentos por año</a></li>
+                                     <li> <a href="{% url 'analisis_tipodocs'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Tipo de Documento</a></li>
+                                 </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de pie</a>
+                                    <ul class="collapse-in nav nav-third-level" area-expanded="true" style="">
+                                     <li> <a href="{% url 'analisis_paisespie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Paises</a></li>
+                                    
+                                    <li> <a href="{% url 'analisis_autorespie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Autores</a></li>
+                                    <li> <a href="{% url 'analisis_afiliacionespie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Afiliaciones</a></li>
+                                     <li> <a href="{% url 'analisis_revistaspie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Revistas</a></li>
+                                    <li> <a href="{% url 'analisis_docsfechaspie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Documentos por año</a></li>
+                                     <li> <a href="{% url 'analisis_tipodocspie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Tipo de Documento</a></li>
+
+                                 </ul>
+                                </li>
+                            </ul>
+
                         </li>
                     </ul>
                 </div>
@@ -138,7 +180,12 @@
 
     <script src="{{STATIC_URL}}js/jquery.js"></script>
     <!--<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>-->
-
+     <script src="{{STATIC_URL}}/lib/jquery-mobile/jquery-2.1.1.min.js"></script>
+        
+    
+    
+    <script src="{{STATIC_URL}}/lib/highcharts/highcharts.js"></script>
+    <script src="{{STATIC_URL}}/lib/highcharts/exporting.js"></script>
 
 
         <!-- Bootstrap Core JavaScript -->
@@ -146,6 +193,7 @@
 
         <!-- Metis Menu Plugin JavaScript -->
     <script src="{{STATIC_URL}}js/plugins/metisMenu/metisMenu.min.js"></script>
+    <script src="{{STATIC_URL}}/lib/d3/d3.min.js"></script>
     <script>
     $(function () {
         // body...

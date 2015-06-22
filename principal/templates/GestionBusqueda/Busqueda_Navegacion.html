@@ -25,7 +25,7 @@
 					        <div>
 					        			
 					        		{%for resultado in resultados%}
-					        			<h1>{{resultado.title}}</h1>
+					        			<h1><a href={{resultado.path}} target="_blank">{{resultado.title}}</a></h1>
 					        			<p>{{resultado.fragment | safe}}</p>
 					        			<p>{{resultado.path}}</p>
 					        			<br>

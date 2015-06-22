@@ -88,6 +88,17 @@ def nuevo_proyecto(request):
                     ir = ConsumirServicios.IR()
                     ir.indexar(str(request.user.username),str(modelo_proyecto.id_proyecto))
 
+
+                    """"
+                    Analisis
+                    """    
+                    data = ConsumirServicios.consumir_analisis(str(request.user.username),str(modelo_proyecto.id_proyecto))
+
+
+                    """
+                    Analisis de Redes Sociales    
+                    """
+                    network = ConsumirServicios.consumir_red(str(request.user.username),str(modelo_proyecto.id_proyecto))
                     """
                        Conexión con base datos para insertar metadatos de paper de Scopus
                     """
@@ -210,6 +221,8 @@ def buscador(request):
         # IR.consultar(fraseBusqueda,"","")
         data = ir.consultar(fraseBusqueda,str(request.user.username),request.session['proyecto'])
         #data = funciones.busqueda(fraseBusqueda)
+        #for d in data:
+        #    d['path'] = d['path'].replace("/home/vigtech/shared/repository/", "/media/").encode("utf8")
         print data
         print fraseBusqueda
     else:
@@ -220,13 +233,34 @@ def buscador(request):
 @login_required
 def analisisView(request):
 
-    data = ConsumirServicios.consumir_red(request.user.username, request.session['proyecto'])
+    #data = ConsumirServicios.consumir_red(request.user.username, request.session['proyecto'])
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    with open("/home/vigtech/shared/repository/" + proyecto + "/coautoria.json") as json_file:
+        data = json.load(json_file)
+    
+    
+
     #nodos, aristas = r.generar_json()
     nodos1 = json.dumps(data['nodes'])
     aristas1 = json.dumps(data['links'])
-    #return render(request, "GestionAnalisis/Analisis.html", {"nodos":nodos, "aristas":aristas})
-    return render(request, "GestionAnalisis/Analisis.html", {"nodos": nodos1, "aristas": aristas1})
+    
+   # return render(request, "GestionAnalisis/coautoria.html", {"nodos": nodos1, "aristas": aristas1})
+    return render(request, "GestionAnalisis/coautoria.html", {"nodos": nodos1, "aristas": aristas1})
+    #return render(request, "GestionAnalisis/coautoria2.html", {"proyecto":proyecto})
+@login_required    
+def coautoria_old(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    with open("/home/vigtech/shared/repository/" + proyecto + "/coautoria.json") as json_file:
+        data = json.load(json_file)
+    
+    
 
+    #nodos, aristas = r.generar_json()
+    nodos1 = json.dumps(data['nodes'])
+    aristas1 = json.dumps(data['links'])
+    
+   # return render(request, "GestionAnalisis/coautoria.html", {"nodos": nodos1, "aristas": aristas1})
+    return render(request, "GestionAnalisis/Analisis.html", {"nodos": nodos1, "aristas": aristas1})
 @login_required
 def eliminar_proyecto(request, id_proyecto):
     user = request.user
@@ -234,3 +268,78 @@ def eliminar_proyecto(request, id_proyecto):
     funciones.eliminar_proyecto(id_proyecto, user)
     project.delete()
     return redirect("ver_mis_proyectos")
+
+@login_required
+def analisis_paises(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    with open("/home/vigtech/shared/repository/" + proyecto + "/data.json") as json_file:
+        data = json.load(json_file)
+        print data
+    labels=json.dumps(data['paises']['labels'])
+    values=json.dumps(data['paises']['valores'])
+    print proyecto
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/paisesbar.html",{"proyecto":proyecto})
+
+@login_required
+def analisis_autores(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/autoresbar.html",{"proyecto":proyecto})
+@login_required
+def analisis_afiliaciones(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/afiliacionesbar.html",{"proyecto":proyecto})
+@login_required
+def analisis_revistas(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/revistasbar.html",{"proyecto":proyecto})
+@login_required
+def analisis_docsfechas(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/fechasbar.html",{"proyecto":proyecto})
+@login_required
+def analisis_tipodocs(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/tiposbar.html",{"proyecto":proyecto})
+
+@login_required
+def analisis_paisespie(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/paisespie.html",{"proyecto":proyecto})
+
+@login_required
+def analisis_autorespie(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/autorespie.html",{"proyecto":proyecto})
+@login_required
+def analisis_afiliacionespie(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/afiliacionespie.html",{"proyecto":proyecto})
+@login_required
+def analisis_revistaspie(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/revistaspie.html",{"proyecto":proyecto})
+@login_required
+def analisis_docsfechaspie(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/fechaspie.html",{"proyecto":proyecto})
+@login_required
+def analisis_tipodocspie(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/tipospie.html",{"proyecto":proyecto})
+@login_required
+def analisis_clustering(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/grupos.html",{"proyecto":proyecto})

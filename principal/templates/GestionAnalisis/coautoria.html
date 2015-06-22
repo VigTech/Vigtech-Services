@@ -1,0 +1,230 @@
+
+{%extends "base.html"%}
+{%load bootstrap3%}
+<meta charset="utf-8">
+ {%block contenido%}
+<style>
+
+div#page-wrapper, .stage {
+  background: #042029; 
+}
+
+
+</style>
+
+
+
+
+
+<script>
+
+var w = 1280,
+    h = 840;
+
+var circleWidth = 8;
+
+var fontFamily = 'Bree Serif',
+    fontSizeHighlight = '1.5em',
+    fontSizeNormal = '1em';
+
+var palette = {
+      "lightgray": "#819090",
+      "gray": "#708284",
+      "mediumgray": "#536870",
+      "darkgray": "#475B62",
+
+      "darkblue": "#0A2933",
+      "darkerblue": "#042029",
+
+      "paleryellow": "#FCF4DC",
+      "paleyellow": "#EAE3CB",
+      "yellow": "#A57706",
+      "orange": "#BD3613",
+      "red": "#D11C24",
+      "pink": "#C61C6F",
+      "purple": "#595AB7",
+      "blue": "#2176C7",
+      "green": "#259286",
+      "yellowgreen": "#738A05"
+  }
+
+var nodes = [
+        {
+            "cc": "nan",
+            "degree": 1,
+            "id": "401",
+            "name": "Vatansever E.",
+            "size": 1,
+            "strength": 1
+        },
+        {
+            "cc": "1.0",
+            "degree": 4,
+            "id": "402",
+            "name": "Martinazzo R.",
+            "size": 4,
+            "strength": 4
+        },
+        {
+            "cc": "1.0",
+            "degree": 9,
+            "id": "403",
+            "name": "Mo Y.",
+            "size": 10,
+            "strength": 10
+        }
+    ]
+
+var links = [
+        {
+            "source": 0,
+            "strength": "1",
+            "target": 2
+        },
+        {
+            "source": 1,
+            "strength": "1",
+            "target": 2
+        },
+        {
+            "source": 0,
+            "strength": "1",
+            "target": 1
+        }
+        
+        
+    ]
+              
+//var proyecto= "{{proyecto}}";
+//d3.json("/media/admin.9/coautoria.json", function(json) {
+  //json = JSON.parse(json);
+
+  nodes={{nodos|safe}}
+  links={{aristas|safe}}
+	//console.log(json.nodes);
+//})
+
+var vis = d3.select("div#page-wrapper")
+    .append("svg:svg")
+      .attr("class", "stage")
+      .attr("width", w)
+      .attr("height", h);
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .gravity(0.9)
+    .charge(-700)
+    .friction(0.6)
+    .size([w, h]);
+
+ var link = vis.selectAll(".link")
+        .data(links)
+        .enter().append("line")
+          .attr("class", "link")
+          .attr("stroke", "#CCC")
+          .attr("fill", "none");
+
+ var node = vis.selectAll("circle.node")
+      .data(nodes)
+      .enter().append("g")
+      .attr("class", "node")
+
+      //MOUSEOVER
+      .on("mouseover", function(d,i) {
+        if (i>=0) {
+          //CIRCLE
+          d3.select(this).selectAll("circle")
+          .transition()
+          .duration(250)
+          .style("cursor", "none")     
+          .attr("r", circleWidth+10)
+          .attr("fill",palette.orange);
+
+          //TEXT
+          d3.select(this).select("text")
+          .transition()
+          .style("cursor", "none")     
+          .duration(250)
+          .style("cursor", "none")     
+          .attr("font-size","2em")
+          .attr("x", 15 )
+          .attr("y", 5 )
+          .attr("fill",palette.orange);
+        } else {
+          //CIRCLE
+          d3.select(this).selectAll("circle")
+          .style("cursor", "none")     
+
+          //TEXT
+          d3.select(this).select("text")
+          .style("cursor", "none")     
+        }
+      })
+
+	//CLICK
+	.on("click", function(d,i) {
+
+	alert(d.name+"\n clustering coeficient:"+d.cc+"\n grado:"+d.degree+"\n fuerza del enlace:"+d.strength);
+
+
+})
+
+
+      //MOUSEOUT
+      .on("mouseout", function(d,i) {
+        if (i>=0) {
+          //CIRCLE
+          d3.select(this).selectAll("circle")
+          .transition()
+          .duration(250)
+          .attr("r", circleWidth)
+          .attr("fill",palette.lightgray);
+
+          //TEXT
+          d3.select(this).select("text")
+          .transition()
+          .duration(250)
+          .attr("font-size","1em")
+          .attr("x", 8 )
+          .attr("y", 4 )
+        }
+      })
+
+      .call(force.drag);
+
+
+    //CIRCLE
+    node.append("svg:circle")
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .attr("r", circleWidth)
+      .attr("fill", function(d, i) { if (i>=0) { return  palette.pink; } else { return palette.paleryellow } } )
+
+    //TEXT
+    node.append("text")
+      .text(function(d, i) { return d.name; })
+    .attr("x",    function(d, i) { return circleWidth + 5; })
+      .attr("y",            function(d, i) { if (i>=0) { return circleWidth + 0 }    else { return 8 } })
+      .attr("font-family",  "Bree Serif")
+      .attr("fill",         function(d, i) {  return  palette.paleryellow;  })
+      .attr("font-size",    function(d, i) {  return  "1em"; })
+      .attr("text-anchor",  function(d, i) { if (i>=0) { return  "beginning"; }      else { return "end" } })
+
+
+
+force.on("tick", function(e) {
+  node.attr("transform", function(d, i) {     
+        return "translate(" + d.x + "," + d.y + ")"; 
+    });
+    
+   link.attr("x1", function(d)   { return d.source.x; })
+       .attr("y1", function(d)   { return d.source.y; })
+       .attr("x2", function(d)   { return d.target.x; })
+       .attr("y2", function(d)   { return d.target.y; })
+});
+
+force.start();
+
+</script>
+{%endblock%}

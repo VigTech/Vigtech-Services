@@ -1,0 +1,68 @@
+{%extends "base.html"%}
+
+{%block contenido%}
+<div class="app">
+<div data-role="page" id="paisesbar">
+<div id="container" style="width: 95%; min-height: 840px; margin: 0 auto"></div>
+</div>
+  </div>
+
+
+
+<script>
+function cargarJson( ) {
+    var proyecto = "{{proyecto}}"
+    return $.getJSON("/media/"+proyecto+"/data.json").then(function (data) {
+        return data;
+    });
+};
+
+$(function () {
+cargarJson().done(function (data) {
+    var source= data;
+    console.log(source);
+var labels=source.fechas.labels;
+var values=source.fechas.valores;
+var datos=[];
+var contador=0;
+for(var item in labels){
+  	
+	datos.push([labels[item], values[item]]);
+	
+
+}
+    $('#container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Cantidad de documentos  por Año'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Documentos por Año',
+            data: datos
+        }]
+    });
+});});
+</script>
+{%endblock%}
+      

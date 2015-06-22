@@ -1,0 +1,86 @@
+{%extends "base.html"%}
+
+{%block contenido%}
+<div class="app">
+<div data-role="page" id="paisesbar">
+<div id="container" style="width: 95%; min-height: 840px; margin: 0 auto"></div>
+</div>
+  </div>
+
+
+
+<script>
+function cargarJson( ) {
+    var proyecto = "{{proyecto}}"
+    return $.getJSON("/media/"+proyecto+"/data.json").then(function (data) {
+        return data;
+    });
+}
+
+$(function () {
+cargarJson().done(function (data) {
+    var source= data;
+    console.log(source);
+var labels=source.tipos.labels;
+var values=source.tipos.valores;
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Documentos por tipo'
+        },
+        subtitle: {
+            text: 'encontrados en la busqueda'
+        },
+        xAxis: {
+            categories:labels,
+            title: {
+                text: "Tipo"
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'numero de documentos',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' documentos'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'documentos',
+            data: values
+        }]
+    });
+});});
+</script>
+{%endblock%}
+
+
+       
