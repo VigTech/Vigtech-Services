@@ -1,0 +1,47 @@
+--SELECT * from paper_proyecto pp JOIN paper p ON p.id=pp.id_paper JOIN paper_autor pa ON pp.id_paper=pa.paper_id WHERE pp.id_proyecto=1
+
+Papers por proyecto
+
+SELECT id_paper, titulo_paper, fecha, total_citaciones, revista_issn, eid, abstract from paper_proyecto pp JOIN paper p ON p.id=pp.id_paper  WHERE pp.id_proyecto=1
+
+Keywords by paper
+
+Select keyword from paper_keyword JOIN keyword ON keyword_id=id WHERE paper_id = 1;
+
+Revista by ISSN
+
+Select issn, titulo_revista from revista WHERE issn = '1a';
+
+Datos básicos para visualización
+{
+    "Proyecto x": {
+        "papers": [
+            {
+                "titulo": "titulo",
+                "abstract": "abstract",
+                "revista": {
+                    "nombre": "nombre",
+                    "issn": "issn"
+                },
+                "keywords": [
+                    "lista_keywords"
+                ],
+                "autor": [
+                    {
+                        "nombre": "nombre",
+                        "id": "id",
+                        "afilicacion": {
+                            "id_serial": "id_serial",
+                            "scopus_id": "scopus_id",
+                            "nombre": "nombre"
+                        },
+                        "pais": "pais"
+                    }
+                ],
+                "citaciones": "citaciones",
+                "fecha": "fecha"
+            }
+        ]
+    }
+}
+

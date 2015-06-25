@@ -36,6 +36,8 @@ urlpatterns = patterns('',
                        url(r'^docsfechaspie/$', 'principal.views.analisis_docsfechaspie', name="analisis_docsfechaspie"),
                        url(r'^tipodocspie/$', 'principal.views.analisis_tipodocspie', name="analisis_tipodocspie"),
                        url(r'^clustering/$', 'principal.views.analisis_clustering', name="clustering"),
+                       url(r'^indicadores/$', 'principal.views.analisis_indicadores', name="indicadores"),
+                       url(r'^clasificacion_eisc/$', 'principal.views.clasificacion_eisc', name="eisc"),
                        url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
                            {'document_root': settings.MEDIA_ROOT}),
 

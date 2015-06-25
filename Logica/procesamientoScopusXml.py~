@@ -105,5 +105,5 @@ def xml_to_bd(xml, id_proyecto, eids_descargados):
     actualizar(eids_descargados)
     return 0
 
-#xml_to_bd(open('xml0.xml'), 13, ['2-s2.0-84874324530', '2-s2.0-84900607712'])
+xml_to_bd(open('xml0.xml'), 13, ['2-s2.0-84874324530', '2-s2.0-84900607712'])
 #main(open('xml0.xml'))

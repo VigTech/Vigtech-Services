@@ -4,8 +4,8 @@ import json
 from urllib2 import urlopen, quote, Request
 import urllib
 import procesamientoScopusXml
-from ConexionBD import adminBD
-
+from ConexionBD.adminBD import AdminBD
+import traceback
 
 REPOSITORY_DIR = "/home/vigtech/shared/repository/"
 def consumir_scholar(consulta, user, proyecto):
@@ -49,7 +49,8 @@ def consumir_scopus(consulta, user, proyecto, limite):
 
     response = urlopen(server)
     data = json.load(response)
-    print response.read()
+    #print response.read()
+    return data
 
 def consumir_analisis(user, proyecto):
     
@@ -60,15 +61,19 @@ def consumir_analisis(user, proyecto):
               
 
     response = urlopen(server)
-    data = json.load(response)
 
+    data = json.load(response)
+    print data
     #analisis = open(REPOSITORY_DIR + "datos.json","w" )
     #analisis.write(data)
-    with open(REPOSITORY_DIR +  str(user)  + "." + str(proyecto) +"/datos.json","w" ) as outfile:
-        json.dump(data, outfile)
+    try:
+        with open(REPOSITORY_DIR +  str(user)  + "." + str(proyecto) +"/data.json","w" ) as outfile:
+            json.dump(data, outfile)
+    except:
+        print "No se ha podido generar el archivo"
     #print response.read()
     #return data
-def consumir_recuperacion_unidades_academicas(proyecto):
+def consumir_recuperacion_unidades_academicas(user,proyecto):
     UNIVERSIDAD_sin_cerrar_parantesis = ' ( AFFIL ( universidad  AND  del  AND  valle )  OR  AF-ID ( 60066812 ) ) '
     UNIVERSIDAD = ' ( AFFIL ( universidad  AND  del  AND  valle )  OR  AF-ID (  60066812 ) ) )'
     aranda = '(AUTHOR-NAME(AUTHLASTNAME(aranda) AUTHFIRST(j)) AND '+UNIVERSIDAD
@@ -94,24 +99,39 @@ def consumir_recuperacion_unidades_academicas(proyecto):
     conceptos = '(TITLE-ABS-KEY(Constraint theory) OR TITLE-ABS-KEY(Problem solving) OR TITLE-ABS-KEY(Constraint programming) OR TITLE-ABS-KEY(Computer programming languages) OR TITLE-ABS-KEY(Logic programming) OR TITLE-ABS-KEY(Random access storage) OR TITLE-ABS-KEY(Computational geometry) OR TITLE-ABS-KEY(Collision detection) OR TITLE-ABS-KEY(Automatic translation) OR TITLE-ABS-KEY(Classification) OR TITLE-ABS-KEY(Software design) OR TITLE-ABS-KEY(User interfaces) OR TITLE-ABS-KEY(E-learning) OR TITLE-ABS-KEY(Virtual learning environment) OR TITLE-ABS-KEY(Adaptive evaluation) OR TITLE-ABS-KEY(Engineering education) OR TITLE-ABS-KEY(Learning system) OR TITLE-ABS-KEY(Recommender system) OR TITLE-ABS-KEY(Information retrieval) OR TITLE-ABS-KEY(Controlled natural language) OR TITLE-ABS-KEY(statistical parsing) OR TITLE-ABS-KEY(Data mining) OR TITLE-ABS-KEY(Database system) OR TITLE-ABS-KEY(Graph data model) OR TITLE-ABS-KEY(Decision support systems) OR TITLE-ABS-KEY(Graph theory) OR TITLE-ABS-KEY(Knowledge discovery in databases) OR TITLE-ABS-KEY(Recommender systems) OR TITLE-ABS-KEY(Electronic commerce) OR TITLE-ABS-KEY(DNA sequence) OR TITLE-ABS-KEY(Gene cluster) OR TITLE-ABS-KEY(Gene function) OR TITLE-ABS-KEY(Nucleotide sequence) OR TITLE-ABS-KEY(Chromosome map) OR TITLE-ABS-KEY(Computational Biology) OR TITLE-ABS-KEY(Bioinformatics) OR TITLE-ABS-KEY(Cellular automata) OR TITLE-ABS-KEY(Protein folding) OR TITLE-ABS-KEY(Computer vision) OR TITLE-ABS-KEY(Quantitative evaluation) OR TITLE-ABS-KEY(Stereo correspondence) OR TITLE-ABS-KEY(Stereo vision) OR TITLE-ABS-KEY(3D reconstruction) OR TITLE-ABS-KEY(Image coding) OR TITLE-ABS-KEY(Image segmentation) OR TITLE-ABS-KEY(Motion estimation) OR TITLE-ABS-KEY(Stereo correspondence) OR TITLE-ABS-KEY(Histology images) OR TITLE-ABS-KEY(Image analysis))'
     social_semantic = '%s AND %s'%(profesores,conceptos)
     direccion_cod = codificar_a_url(revistas)
-    json_eids_revistas = urlopen('http://127.0.0.1:5001/obtenerEid/?consulta=%s'%(direccion_cod))
+    json_eids_revistas = urlopen('http://127.0.0.1:50001/obtenerEid/?consulta=%s'%(direccion_cod))
     eids_revistas = json.load(json_eids_revistas)['eids']
     eids_revistas = map(str, eids_revistas)
-    print profesores
+    #print profesores
 
     eids_direccion = obtener_conjunto(direccion)
     eids_profesores = obtener_conjunto(profesores)
     eids_social_semantic = obtener_conjunto(social_semantic)
 
-    papers_clasificar = adminBD.get_eid_papers_proyecto(proyecto)
+    abd = AdminBD()
 
-    diccionario_peticion = {"j":eids_revistas, "s":eids_profesores, "clasificar":eids_revistas, "a": eids_direccion, "o":eids_social_semantic}
-    print str(diccionario_peticion)
-    consultica = str(diccionario_peticion).replace('\'','"')
-    consulta = 'http://127.0.0.1:5000/clasificacionUnidadAcademica/?datosJson=%s'%(consultica)
+    papers_clasificar = abd.get_eid_papers_proyecto(proyecto)
+    #print papers_clasificar
+
+    diccionario_peticion = {"j":eids_revistas, "s":eids_profesores, "clasificar":papers_clasificar, "a": eids_direccion, "o":eids_social_semantic}
+    #print str(diccionario_peticion)
+    consultica = str(diccionario_peticion).replace('\'','"').replace('u"','"')
+    print 'hola'
+    consulta = 'http://127.0.0.1:50004/clasificacionUnidadAcademica/?datosJson=%s'%(consultica)
     print consulta
-    json_clasificados = urlopen('http://127.0.0.1:5000/clasificacionUnidadAcademica/?datosJson=%s'%(codificar_a_url(consultica)))
-    print json_clasificados.read()
+    
+    try:
+		json_clasificados = urlopen('http://127.0.0.1:50004/clasificacionUnidadAcademica/?datosJson=%s'%(codificar_a_url(consultica)))
+		data =json_clasificados.read()
+		#data=json.load(json_clasificados)
+		archivo = open(REPOSITORY_DIR +  str(user)  + "." + str(proyecto) +"/eisc.json", "w")
+		archivo.write(data)
+		archivo.close()
+		#with open(REPOSITORY_DIR +  str(user)  + "." + str(proyecto) +"/eisc.json","w" ) as outfile:
+		#	json.dump(data, outfile)
+    except:
+		raise
+		print "No se ha podido generar el archivo"
 
 def codificar_a_url(consulta):
     consulta_formateada = quote(consulta.encode("utf8"))
@@ -119,7 +139,7 @@ def codificar_a_url(consulta):
 
 def obtener_conjunto(consulta):
     consulta_cod = codificar_a_url(consulta)
-    json_eids_conjunto = urlopen('http://127.0.0.1:5001/obtenerEid/?consulta=%s'%(consulta_cod))
+    json_eids_conjunto = urlopen('http://127.0.0.1:50001/obtenerEid/?consulta=%s'%(consulta_cod))
     eids = json.load(json_eids_conjunto)['eids']
     eids = map(str, eids)
     return eids
@@ -159,7 +179,7 @@ class IR:
 def consumir_red(user, proyecto):
     user = quote(user.encode("utf8"))
     proyecto = quote(proyecto.encode("utf8"))   
-    server ="http://localhost:50002/red/?proyecto=" + str(proyecto)  + "&user=" + str(user)
+    server ="http://localhost:50002/red/?proyecto=" + str(proyecto)  + "&user=" + str(user)   	 	
     response = urlopen(server)
     data = json.load(response)
     with open(REPOSITORY_DIR +  str(user)  + "." + str(proyecto) +"/coautoria.json","w" ) as outfile:
@@ -171,3 +191,30 @@ def consumir_red(user, proyecto):
 #Hagamos un prueba en este archivo
 
 #consumir_arxiv("Software", "camicasi" ,"1" , 2)
+#consumir_recuperacion_unidades_academicas(22)
+
+def consumir_descargar_dois(user, proyecto):
+	user = quote(user.encode("utf8"))
+	proyecto = quote(proyecto.encode("utf8"))
+	admin =AdminBD()
+	dois =admin.get_dois_proyecto(proyecto)	
+	print "DOIS:",dois
+	resultado=""
+	
+	for doi in dois:
+		#print doi
+		resultado += doi +","
+	resultado = resultado[0:len(resultado)-1]
+	print "RESULTADO:",resultado
+    #pasar dois a lista separada por comas   
+	server ="http://0.0.0.0:50005/download?dois="+resultado +"&path=" + str(user)  + "." + str(proyecto) 
+	print server
+	try:
+		response = urlopen(server)
+		#print response.read()
+	except:
+		print "IMPOSIBLE REALIZAR LA DESCARGA POR DOI", traceback.format_exc()
+		
+  	 	
+#consumir_descargar_dois("admin", "22")
+#consumir_recuperacion_unidades_academicas("admin","31")

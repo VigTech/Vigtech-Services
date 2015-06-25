@@ -1,0 +1,56 @@
+{%extends 'base.html'%}
+{%load bootstrap3%}
+
+
+{%block contenido%}
+
+	<div class="container">
+		<h1 class="page-header"><i class="fa fa-file-o">Datos Generales</i></h1>
+
+		<div class="row">
+			<div class = "col col-lg-6">
+				<label><b>Consulta:</b></label><br>
+				<input type='text' value={{data.data.query}} readonly>
+			</div>	
+			<div class = "col col-lg-6">
+				<label><b>H-Index:</b></label><br>
+				<input type='text' value={{data.data.hindex}} readonly>
+			</div>	
+		</div>
+		<br>
+		<div class="row">
+			<div class = "col col-lg-6">
+				<label><b>Promedio autores por documento:</b></label><br>
+				<input type='text' value={{data.data.promedioautdoc}} readonly>
+			</div>	
+			<div class = "col col-lg-6">
+				<label><b>Promedio de citas por documento:</b></label><br>
+				<input type='text' value={{data.data.promediocitadoc}} readonly>
+			</div>	
+		</div>
+		<br>
+		<div class="row">
+			<div class = "col col-md-6">
+				<label><b>Total de documentos:</b></label><br>
+				<input type='text' value={{data.data.documentos}} readonly>
+			</div>	
+			<div class = "col col-lg-6">
+				<label><b>Total de citas:</b></label><br>
+				<input type='text' value={{data.data.citas}} readonly>
+			</div>	
+		</div>
+		<br>
+		<div class="row">
+			<div class = "col col-lg-6">
+				<label><b>	Total de autores:</b></label><br>
+				<input type='text' value={{data.data.autores}} readonly>
+			</div>	
+			<div class = "col col-lg-6">
+				<label><b>Total de revistas</b></label><br>
+				<input type='text' value={{data.data.revistas}} readonly>
+			</div>	
+		</div>				
+
+	</div>
+
+{%endblock%}

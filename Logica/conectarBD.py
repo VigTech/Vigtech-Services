@@ -6,6 +6,7 @@ def run_query(query=''):
     #conn_string = "host='localhost' dbname='postgres' user='postgres' password='chucho'"
     conn_string = "host='127.0.0.1' dbname='docker' user='docker' password='docker' port='49153'"
     conn = psycopg2.connect(conn_string) # Conectar a la base de datos
+    #$conn.set_character_encoding('utf8')
     cursor = conn.cursor()         # Crear un cursor
     cursor.execute(query)          # Ejecutar una consulta
 
@@ -35,8 +36,17 @@ def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto)
     #funcion_sql_ultimo_id = "SELECT currval('paper_id_seq');"
     #paper_query = "INSERT INTO paper (doi,titulo_paper, abstract, issn, fecha, revista_issn, total_citaciones) VALUES ('%s','%s','%s',%s,%s,%s,%s);"%(paper['doi'],paper['title'],paper['abstract'])
     #paper_query = "INSERT INTO paper (doi,titulo_paper, abstract) VALUES ('%s','%s','%s') RETURNING id;"%(paper['doi'],paper['title'],paper['description'])
-    id_revista = insert_returning_id(revista, 'revista', 'issn', 'issn', 'issn', ['issn', 'titulo_revista'],
-                                     ['issn', 'publicationName'])
+
+    if revista['issn']!='00000':
+        id_revista = insert_returning_id(revista, 'revista', 'issn', 'issn', 'id', ['issn', 'titulo_revista', 'isbn'],
+                                        ['issn', 'publicationName', 'isbn'])
+    elif revista['isbn']!='00000':
+        id_revista = insert_returning_id(revista, 'revista', 'isbn', 'isbn', 'id', ['issn', 'titulo_revista', 'isbn'],
+                                        ['issn', 'publicationName', 'isbn'])
+    else:
+        id_revista = insert_returning_id(revista, 'revista', 'publicationName', 'titulo_revista', 'id',
+                                         ['issn', 'titulo_revista', 'isbn'], ['issn', 'publicationName', 'isbn'])
+
     print 'hola'
     id_paper = insert_returning_id(paper, 'paper', 'eid', 'eid', 'id', ['eid', 'titulo_paper', 'abstract','total_citaciones',
                                     'fecha','doi'],
@@ -47,6 +57,7 @@ def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto)
         id_afiliacion = insert_returning_id(afiliacion, 'afiliacion', 'afid', 'scopus_id', 'id',
                                         ['scopus_id', 'nombre', 'pais','ciudad','variante_nombre'],
                                         ['afid', 'affilname', 'affiliation-country','affiliation-city','name-variant'])
+        insert_relation('paper_afiliacion', 'paper_id', 'afiliacion_id', id_paper, id_afiliacion)
     for autor in autores:
         '''
         lista_id_autor = select_id('autor', 'id_scopus', autor['authid'])
@@ -111,10 +122,35 @@ def select_id2(tabla, atrib_id1, atrib_id2, valor1, valor2):
     result = run_query(query)
     return result
 
+def actualizar(titulos):
+    for titulo in titulos:
+        query = "UPDATE paper SET descargo=TRUE WHERE titulo_paper='%s';"%(titulo)
+        run_query(query)
+        #print 'Modificando descarg'
+
+def buscar(datos, tabla_conjunto, campo):
+    '''Busca los datos en la tabla de paper'''
+    condiciones = ''
+    for dato in datos:
+        base = campo+" LIKE '%%%s%%' AND "
+        ANDS = base*len(dato)%tuple((datin for datin in dato))#[:-]
+        ANDS = ANDS[:-4]
+        condiciones = condiciones + '('+ANDS +') OR '
+    condiciones = condiciones[:-3]
+
+    query = "SELECT titulo_paper FROM paper_%s,%s,paper WHERE (%s.id = %s_id AND paper.id = paper_id) AND ("%(tabla_conjunto,
+                                                                        tabla_conjunto,tabla_conjunto,tabla_conjunto)+condiciones+')'
+    #query = 'SELECT titulo FROM paper WHERE ( campo LIKE %%s% OR campo LIKE %%s% OR campo LIKE %%s%) AND' \
+    #        '( campo LIKE %%s% OR campo LIKE %%s% OR campo LIKE %%s%) AND (campo LIKE %%s%' \
+    #        ''
+    print query
+
 
 #print select()[1]
 #existe('paper','id', '1' )
+
 def main():
     run_query('SELECT * FROM paper')
+    buscar([['ing','sist','comp'],['eng', 'sys', 'comp']], 'afiliacion', 'nombre')#,[],[],[]])
 
 #main()
