@@ -14,11 +14,12 @@ import sys
 from administradorConsultas import AdministradorConsultas
 from manejadorArchivos import obtener_autores
 from red import Red
-from Logica import ConsumirServicios, procesamientoScopusXml
+from Logica import ConsumirServicios, procesamientoScopusXml, procesamientoArxiv
 # import igraph
+import traceback
 import json
 import django.utils
-
+from Logica.ConexionBD.adminBD import AdminBD
 # sys.setdefaultencoding is cancelled by site.py
 reload(sys)  # to re-enable sys.setdefaultencoding()
 sys.setdefaultencoding('utf-8')
@@ -74,6 +75,7 @@ def nuevo_proyecto(request):
 
             funciones.CrearDirectorioProyecto(modelo_proyecto.id_proyecto, request.user)
             if fraseB != "":
+
                 try:
                     """
                         Descarga de documentos de Google Scholar y Scopus
@@ -99,17 +101,40 @@ def nuevo_proyecto(request):
                     Analisis de Redes Sociales    
                     """
                     network = ConsumirServicios.consumir_red(str(request.user.username),str(modelo_proyecto.id_proyecto))
+
+                    """
+                        Inserción de metadatos Arxiv
+                    """
+                    xml = open("/home/vigtech/shared/repository/"+ str(request.user.username)
+                                    + "." + str(modelo_proyecto.id_proyecto) + "/salida.xml")
+
+                    try:
+                        procesamientoArxiv.insertar_metadatos_bd(str(modelo_proyecto.id_proyecto),xml)
+                    except:
+                        print traceback.format_exc()
+
                     """
                        Conexión con base datos para insertar metadatos de paper de Scopus
                     """
                     busqueda = open("/home/vigtech/shared/repository/"+ str(request.user.username)
                                     + "." + str(modelo_proyecto.id_proyecto) + "/busqueda0.xml")
-				
-                    procesamientoScopusXml.xml_to_bd(busqueda, modelo_proyecto.id_proyecto)
 
+                    """
+                        NAIVE BAYES
+                    """
+                    #ConsumirServicios.consumir_recuperacion_unidades_academicas(str(request.user.username),str(modelo_proyecto.id_proyecto))
+				
+                    try:
+                        procesamientoScopusXml.xml_to_bd(busqueda, modelo_proyecto.id_proyecto, articulos_scopus['titulos'])
+                    except:
+                        print traceback.format_exc()
+
+                    ConsumirServicios.consumir_recuperacion_unidades_academicas(str(request.user.username),str(modelo_proyecto.id_proyecto))
+                    
                     
                     messages.success(request, "Se ha creado exitosamente el proyecto")
                 except:
+                    print traceback.format_exc()
                     messages.error(request, "Hubo un problema en la descarga")
 
 
@@ -343,3 +368,26 @@ def analisis_clustering(request):
     proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
     #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
     return render(request, "GestionAnalisis/grupos.html",{"proyecto":proyecto})
+
+@login_required
+def analisis_indicadores(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    with open("/home/vigtech/shared/repository/" + proyecto + "/data.json") as json_file:
+        data = json.load(json_file)
+        print data
+    #labels=json.dumps(data['paises']['labels'])
+    #values=json.dumps(data['paises']['valores'])
+    #print proyecto
+    #return render(request, "GestionAnalisis/paisesbar.html",{"labels": labels, "values": values})
+    return render(request, "GestionAnalisis/indicadores.html",{"data":data})
+@login_required
+def clasificacion_eisc(request):
+    proyecto = str(request.user.username) + "." + str(request.session['proyecto'])
+    with open("/home/vigtech/shared/repository/" + proyecto + "/eisc.json") as json_file:
+        data = json.load(json_file)
+    
+    eids = data['clasificacion']
+    adminBD = AdminBD()
+    papers =adminBD.get_papers_eid(eids)
+    return render (request, "GestionEISC/clasificacion_eisc.html", {"papers": papers})
+

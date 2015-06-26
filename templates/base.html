@@ -103,7 +103,7 @@
                             <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
                             
                                 <li><a href="{% url 'crear_proyecto' %}"><i class="fa fa-plus-square-o fa-fw"></i>Crear Proyecto</a></li>
-                                <li><a href="#"><i class="fa fa-trash-o fa-fw"></i>Eliminar Proyecto</a></li>
+                                
                                 <li><a href="{% url 'ver_mis_proyectos'%}"><i class="fa fa-list-ul fa-fw"></i>Mis Proyectos</a></li>
                                 <li><a href="{% url 'ver_otros_proyectos'%}"><i class="fa fa-ellipsis-h fa-fw"></i>Otros Proyectos</a></li>
                                 
@@ -114,27 +114,12 @@
                         <li class=""> 
                              <a href="{% url 'busqueda_navegacion'%}"><i class="fa fa-globe fa-fw"></i> Búsqueda y Navegación</a>
                         </li>
-                        <li class="">
-                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Análisis</a>
-                             <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
-                                <li>
-                                    <a href="{% url 'coautoria2' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'coautoria1' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria con medidas</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'clustering' %}"><i class="fa fa-cube  fa-fw"></i>Clustering</a>
-                                </li>
-                             </ul>
-                             
-                        </li>
-                        <li>
+                         <li>
 
                             <a href="#"><i class="fa fa-cube  fa-fw"></i>Estadísticas</a>
                             <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
                                 <li>
-                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Indicadores básicos</a>
+                                    <a href="{%url 'indicadores'%}"><i class="fa fa-cube  fa-fw"></i>Indicadores básicos</a>
                                 </li>
                                 <li>
                                     <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de barra</a>
@@ -163,6 +148,25 @@
                             </ul>
 
                         </li>
+                        <li class="">
+                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Análisis</a>
+                             <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
+                                <li>
+                                    <a href="{% url 'coautoria2' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'coautoria1' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria con medidas</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'clustering' %}"><i class="fa fa-cube  fa-fw"></i>Clustering</a>
+                                </li>
+                             </ul>
+                             
+                        </li>
+                        <li>
+                           <a href="{%url 'eisc' %}"><i class="fa fa-bar-chart-o fa-fw"></i>Clasificación EISC</a> 
+                        </li>
+                       
                     </ul>
                 </div>
             </div>
