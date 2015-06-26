@@ -22,8 +22,8 @@ def obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor, 
             registrar(campito, keys, etiquetas_keys)
             registrar_autores(campito,autores,etiquetas_autor,'{http://www.w3.org/2005/Atom}author')
             registrar_autores(campito,afiliaciones,etiquetas_afiliaciones,'{http://www.w3.org/2005/Atom}affiliation')
-            print campito.tag, campito.text
-            #print paper
+            #print campito.tag, campito.text, campito.attrib
+            print 'PAPER', paper
             respuesta.append(campito.text)
         #Dividir las keywords en su diccionario
         #print keys
@@ -49,8 +49,8 @@ def registrar_autores(campito, autores, etiquetas_autor,tag):
             #print autor
             #print meta_autor.tag, meta_autor.text
         autores.append(autor)
-            #print autor
-            #print autores
+        #print autor
+        #print autores
 
 
 def registrar(campito, paper, etiquetas_metadatos):
@@ -60,14 +60,28 @@ def registrar(campito, paper, etiquetas_metadatos):
     paper: variable en la que se va almacenando el diccionario con los datos
     etiquetas_metadatos: Lista con los tags de los metadatos que vamos a guardar'''
     for metadato in etiquetas_metadatos:
-        nombre_meta = metadato.partition('}')[2]
-        if(paper.get(nombre_meta) == None):
-            paper[nombre_meta] = '00000'
-        if metadato == campito.tag:
-            #print 'fue'
-            #print campito.text
-            if campito.text is not None:
-				paper[nombre_meta] = campito.text.replace("'", " ").encode('utf-8')
+        if metadato == '{http://www.w3.org/2005/Atom}link':
+            print 'SIIIII'
+            revisar_links(campito,paper)
+        else:
+            nombre_meta = metadato.partition('}')[2]
+            if(paper.get(nombre_meta) == None):
+                paper[nombre_meta] = '00000'
+            if metadato == campito.tag:
+                #print 'fue'
+                #print campito.text
+                if campito.text is not None:
+                    paper[nombre_meta] = campito.text.replace("'", " ").encode('utf-8')
+
+
+def revisar_links(campito, paper):
+    if campito.attrib != {}:
+        print 'ATRI', campito.attrib
+        print campito.attrib['href']
+        if campito.attrib['ref'] == 'scopus':
+            if(paper.get('linkScopus') == None):
+                paper['linkScopus'] = '00000'
+                paper['linkScopus'] = campito.attrib['href'].replace("'", " ").encode('utf-8')
 
 def dividir_diccionario_key(keywords, etiquetas):
     keys_respuesta = []
@@ -87,16 +101,17 @@ def dividir_diccionario_key(keywords, etiquetas):
 
 def xml_to_bd(xml, id_proyecto):
     etiquetas_paper = ['{http://purl.org/dc/elements/1.1/}title', '{http://purl.org/dc/elements/1.1/}description',
-                 '{http://prismstandard.org/namespaces/basic/2.0/}doi', '{http://prismstandard.org/namespaces/basic/2.0/}issn',
-                 '{http://www.w3.org/2005/Atom}citedby-count', '{http://www.w3.org/2005/Atom}eid',
-                 '{http://prismstandard.org/namespaces/basic/2.0/}coverDate', '{http://prismstandard.org/namespaces/basic/2.0/}volume']
+                       '{http://prismstandard.org/namespaces/basic/2.0/}doi', '{http://prismstandard.org/namespaces/basic/2.0/}issn',
+                       '{http://www.w3.org/2005/Atom}citedby-count', '{http://www.w3.org/2005/Atom}eid',
+                       '{http://prismstandard.org/namespaces/basic/2.0/}coverDate', '{http://prismstandard.org/namespaces/basic/2.0/}volume',
+                       '{http://www.w3.org/2005/Atom}link']
     etiquetas_revista = ['{http://prismstandard.org/namespaces/basic/2.0/}publicationName',
                          '{http://prismstandard.org/namespaces/basic/2.0/}issn']
     etiquetas_autor= ['{http://www.w3.org/2005/Atom}authid', '{http://www.w3.org/2005/Atom}authname',
                       '{http://www.w3.org/2005/Atom}afid']
     etiquetas_afiliaciones=['{http://www.w3.org/2005/Atom}afid','{http://www.w3.org/2005/Atom}affilname',
-                           '{http://www.w3.org/2005/Atom}name-variant','{http://www.w3.org/2005/Atom}name-variant',
-                           '{http://www.w3.org/2005/Atom}affiliation-city','{http://www.w3.org/2005/Atom}affiliation-country']
+                            '{http://www.w3.org/2005/Atom}name-variant','{http://www.w3.org/2005/Atom}name-variant',
+                            '{http://www.w3.org/2005/Atom}affiliation-city','{http://www.w3.org/2005/Atom}affiliation-country']
     etiquetas_keywords=['{http://www.w3.org/2005/Atom}authkeywords']
 
     #dividir_diccionario_key({"authkeywords":'Meta-language | Mobile robot | Programming environment | STEM'},etiquetas_keywords)

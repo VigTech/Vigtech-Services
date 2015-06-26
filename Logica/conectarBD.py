@@ -39,14 +39,14 @@ def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto)
                                      ['issn', 'publicationName'])
     print 'hola'
     id_paper = insert_returning_id(paper, 'paper', 'eid', 'eid', 'id', ['eid', 'titulo_paper', 'abstract','total_citaciones',
-                                    'fecha','doi'],
-                                   ['eid', 'title', 'description','citedby-count','coverDate','doi'])
+                                                                        'fecha','doi', 'link_source'],
+                                   ['eid', 'title', 'description','citedby-count','coverDate','doi','linkScopus'])
 
 
     for afiliacion in afiliaciones:
         id_afiliacion = insert_returning_id(afiliacion, 'afiliacion', 'afid', 'scopus_id', 'id',
-                                        ['scopus_id', 'nombre', 'pais','ciudad','variante_nombre'],
-                                        ['afid', 'affilname', 'affiliation-country','affiliation-city','name-variant'])
+                                            ['scopus_id', 'nombre', 'pais','ciudad','variante_nombre'],
+                                            ['afid', 'affilname', 'affiliation-country','affiliation-city','name-variant'])
     for autor in autores:
         '''
         lista_id_autor = select_id('autor', 'id_scopus', autor['authid'])
@@ -69,7 +69,7 @@ def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto)
 
     for key in keywords:
         id_key = insert_returning_id(key, 'keyword', 'authkeywords', 'keyword', 'id', ['keyword'],
-                                       ['authkeywords'])
+                                     ['authkeywords'])
 
         insert_relation('paper_keyword', 'paper_id', 'keyword_id', id_paper, id_key)
 
