@@ -75,13 +75,16 @@ def registrar(campito, paper, etiquetas_metadatos):
 
 
 def revisar_links(campito, paper):
-    if campito.attrib != {}:
-        print 'ATRI', campito.attrib
-        print campito.attrib['href']
-        if campito.attrib['ref'] == 'scopus':
-            if(paper.get('linkScopus') == None):
-                paper['linkScopus'] = '00000'
-                paper['linkScopus'] = campito.attrib['href'].replace("'", " ").encode('utf-8')
+	try:
+		if campito.attrib != {}:
+			print 'ATRI', campito.attrib
+			print campito.attrib['href']
+			if campito.attrib['ref'] == 'scopus':
+				if(paper.get('linkScopus') == None):
+					paper['linkScopus'] = '00000'
+					paper['linkScopus'] = campito.attrib['href'].replace("'", " ").encode('utf-8')
+	except:
+		print 'problems'
 
 def dividir_diccionario_key(keywords, etiquetas):
     keys_respuesta = []

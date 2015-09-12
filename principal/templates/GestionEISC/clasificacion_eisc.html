@@ -9,7 +9,7 @@
             </div>
            <ul>		
 				{%for paper in papers%}
-				 <li>{{paper.titulo}} </li>
+				 <li><a href={{paper.link_source}} target="_blank">{{paper.titulo}} </a></li>
 
 				{%endfor%}
 			</ul>

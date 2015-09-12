@@ -21,6 +21,10 @@ def get_metadatos(xml):
 				#print doi
 		else:
 			doi = '00000'
+		if link.get('title') == 'pdf':
+			linktext=link.get('href')
+		else:
+			linktext=""
 				#print doi
 		partsid=node.find("{http://www.w3.org/2005/Atom}id").text.split("/")
 		id = partsid[len(partsid)-1]
@@ -35,7 +39,7 @@ def get_metadatos(xml):
 		for autor in node.findall('{http://www.w3.org/2005/Atom}author'):
 			for name in autor.iter('{http://www.w3.org/2005/Atom}name'):
 				autores.append(name.text)
-		paper={"doi":str(doi),"fecha":str(fecha),"id":str(id),"titulo":str(titulo), "abstract":str(abstract), 'autores': autores}
+		paper={"doi":str(doi),"fecha":str(fecha),"id":str(id),"titulo":str(titulo), "abstract":str(abstract), 'autores': autores, "link":linktext}
 			#print autores
 		papers.append(paper)
 		#print papers

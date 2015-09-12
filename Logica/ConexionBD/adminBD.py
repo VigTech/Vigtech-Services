@@ -73,7 +73,7 @@ class AdminBD:
     def insertar_papers(self, proyecto,papers):
         print "hola mundo"
         for paper in papers:
-            consulta = "INSERT INTO paper (doi,fecha,titulo_paper, total_citaciones,eid,abstract,descargo) VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\') RETURNING id"%(paper['doi'], paper['fecha'], paper['titulo'],str(0), '00000', paper['abstract'], 'FALSE')
+            consulta = "INSERT INTO paper (doi,fecha,titulo_paper, total_citaciones,eid,abstract,descargo,link_source) VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\') RETURNING id"%(paper['doi'], paper['fecha'], paper['titulo'],str(0), '00000', paper['abstract'], 'FALSE', paper['link'])
             try:
                 print consulta
                 self.cursor.execute(consulta)
@@ -135,7 +135,7 @@ class AdminBD:
             sys.exit(1)
 
     def get_papers_eid(self, eids):
-        consulta = 'SELECT titulo_paper FROM paper WHERE '
+        consulta = 'SELECT titulo_paper, link_source  FROM paper WHERE '
         count = 0
         for eid in eids:
             if count == 0:
@@ -153,12 +153,12 @@ class AdminBD:
             papers=[]
             for row in filas:
                    #papers.append({"titulo": row['titulo_paper'], "link": row['link'])
-                papers.append({"titulo": row['titulo_paper']})
+                papers.append({"titulo": row['titulo_paper'], "link_source": row['link_source']})
                     #eids.append( row['eid'])
             #print filas
             return papers
         except psycopg2.DatabaseError, e:
-            print traceback.format_exc()
+            #print traceback.format_exc()
             print 'Error %s' %e
             print "Imposible realizar la cosulta"
             sys.exit(1)
@@ -172,7 +172,7 @@ class AdminBD:
             papers=[]
             for row in filas:
                    #papers.append({"titulo": row['titulo_paper'], "link": row['link'])
-                papers.append({"titulo": row['titulo_paper']})
+                papers.append({"titulo": row['titulo_paper'], "link_source": row['link_source']})
                     #eids.append( row['eid'])
             #print filas
             return eids
