@@ -4,26 +4,21 @@
 	<div class="page-wraper">
 		<div class="row">
 			<div class="col-lg-12">
-            	<h1 class="page-header"><i class="fa fa-file-o">Nuevo Proyecto</i>
-            	 <!--<a href="{% url 'login' %}"><i style="float:right;"class="fa fa-home" align="right"></a></i></h1>
-                 -->
-
+            	<h1 class="page-header" >Nuevo Proyecto</h1>
         	</div>
-        	<div class="col-md-8">
-        		{% if messages %}
-        		<div class="row">
-        			<div class="col-xs-12">
-        				{% for message in messages %}
-					    	<p{% if message.tags == "success" %} class="alert alert-success"{% endif %}>{{ message }}</p>
-					    {% endfor %}
-        			</div>
-        		</div>
-        		{% endif %}
-	        	<form method="POST">
-	        		{% csrf_token %}
-	        		{% bootstrap_form form %}
-	        		<div class="row">
-		        		<div class="col-md-12">	
+        	<div class="col-md-12">
+	        	<form id="formproject" method="POST">
+	        		{% csrf_token %}	
+	        		<div class="row">	
+						<div class="col-md-8">	
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									Bienvenido,  <b>{{user.username}}</b> aqui puedes crear un nuevo proyecto
+								</div>
+								<div class="panel-body">
+									{% bootstrap_form form %}
+								</div>
+							</div>
 		        			<div class="panel panel-primary">
 				        		<div class="panel-heading">
 				        			Búsqueda
@@ -39,7 +34,7 @@
 			                        <div class="tab-content">
 			                        	<div class="tab-pane fade in active" id="basica">
 			                        		<p></p>
-			                        		<p><input class="form-control" placeholder="¿Qué deseas buscar?" name= "fraseB"id='fraseB' size="50"/></p>
+			                        		<p><input class="form-control" placeholder="¿Qué deseas buscar?" name= "fraseB" id='fraseB' size="50"/></p>
 			                        	</div>
 
 			                        	<div class="tab-pane fade" id="avanzada">
@@ -56,38 +51,58 @@
 												<br>
 												<input class="form-control" type="text" name="autor" id="autor" size="50"/>
 												<br>
-												
-												Escritos entre
-												
+												Escritos entre											
 												<input type="year" placeholder="Desde" name="before" id="before" size="10">---<input type="year" placeholder="Hasta" name="after"  id="after" size="10">
 												<br><br>
 											</fieldset>
 			                        	</div>
 			                        </div>
-				        		</div>
-				        	</div>
-			        	</div>
-			        </div> 
-			        <label> Limite Arxiv </label>
-			        <input type = "number" min="0" max="500" step="10" value="20" size="20" name="limArxiv" id="limArxiv"> 
-			        <label> Limite Scopus </label>
-			        <input type = "number" min="0" max="5000" step="100" value="100" size="20" name="limSco" id="limSco"> 
-			        <br><br>
-	        		<input type="submit" class="btn btn-primary btn-lg btn-block" value="Crear Proyecto" onclick="$('#load').show();" />
-	        		<br><br>
-	        		<div  id='load'class='modal' align="center" style="display:none;">
-						<img src='{{STATIC_URL}}img/712.GIF' id='loading_image' alt="">
+				        		</div>				        		
+				        	</div>				        	
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							Parametros de Busqueda
+						</div>
+						<div class="panel-body">
+							<label> Limite Arxiv </label>
+							<input type = "number" min="0" max="500" step="10" value="20" size="20" name="limArxiv" id="limArxiv"> 
+							<label> Limite Scopus </label>
+							<input type = "number" min="0" max="5000" step="100" value="100" size="20" name="limSco" id="limSco"> 		
+						</div>
 					</div>
-				</form>
-			</div>
-		</div>
-		<p></p>
-	</div>
-{% endblock %}
+					<input id="btncreateproject" class="btn btn-primary btn-lg btn-block" value="Crear Proyecto" />
+					&nbsp;
+					&nbsp;
+				</div>	
+			</form>
+			<div id="sincampos" class="alert alert-danger col-md-4" style="display:none;"></div>
+			<div class="col-md-4" id='load' style="display:nne;">
+				<div id="divproceso" class="chat-panel panel panel-default" >
+					<div class="panel-heading">
+						<b>Proceso</b>
+						<hr/>
+						<!-- <img id='loadgif' style="display:noe;" src='{{STATIC_URL}}img/loading_bar.gif' alt="" height="20" width="100%"> -->
+<div class="progress">
+  <div class="progress-bar progress-bar-danger" role="progressbar"  id="progressbardescarga" style="color:#000;display:none;">Descargando</div>	
+  <div class="progress-bar progress-bar-warning" role="progressbar" id="progressbaranalisis" style="color:#000;display:none;">Analisis</div>
+  <div class="progress-bar progress-bar-success" role="progressbar" id="progressbarfin" style="color:#000;display:none;">finalizando</div>
+</div>						
+					</div>							
+					<div id="msj" class="panel-body" style="height:400px;">
+					</div>
+				</div>
 
+			</div>	
+		</div>
+	</div>			
+</div>
+{% endblock %}
 {% block scripts%}
 <script type="text/javascript">
-	
+    $(function () {
+        // body...
+          $('#menu').metisMenu();
+    });
 	function validar(){
 		var words=document.getElementById("words").value;
 		var fraseA=document.getElementById("fraseA").value;
@@ -109,10 +124,9 @@
 			if(autor !=""){
 				valor++;
 			}
-
 			console.log(valor);
 			if (valor>0){
-				//alert("GOOD!!")
+				alert("GOOD!!")
 				return true;
 			
 			}
@@ -123,13 +137,6 @@
 			}
 
 		}
-		
-		
-
-
-
 	}
-
-
 </script>
 {% endblock%}

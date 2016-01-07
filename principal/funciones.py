@@ -2,8 +2,14 @@ import scholar
 import os
 import json
 import urllib
+import xml.etree.cElementTree as ET
+from principal.parameters import *
 
-REPOSITORY_DIR = '/home/vigtech/shared/repository/'
+
+
+
+# REPOSITORY_DIR = '/home/japeto/shared/repository/'
+REPOSITORY_DIR = REPOSITORY_DIR
 def buscadorSimple(frase):
     # nombre_directorio=str(id_user)+ "."+ str(id_proyecto)
     querier = scholar.ScholarQuerier()
@@ -67,7 +73,7 @@ def getArticlesDict(articles):
         if url_pdf is not None:
             newArt = {'titulo': titulo, 'url': url, 'url_pdf': url_pdf}
             articulos.append(newArt)
-            print (newArt['titulo'] + '\n')
+            # print (newArt['titulo'] + '\n')
 
     return articulos
 
@@ -104,9 +110,9 @@ def moveFiles(nombreProyecto, user, articulosScholar, articulosScopus):
 
 def indexarArchivos():
     ejecutar = "java -jar /home/administrador/OlayaVigtech/Indexador/Indexador.jar /home/administrador/OlayaVigtech/indices/ /home/administrador/archivos"
-    print "Indexando..."
+    # print "Indexando..."
     os.system(ejecutar)
-    print "Indexacion terminada..."
+    # print "Indexacion terminada..."
 
 
 def CrearDirectorioProyecto(nombreProyecto, user):
@@ -151,7 +157,7 @@ def crearListaDocumentos(id_proyecto, user):
 
 def eliminar_proyecto(id_proyecto, user):
     os.system("rm -rf " + REPOSITORY_DIR + str(user) + "." + str(id_proyecto))
-    os.system("rm -rf /home/vigtech/shared/indexes" + str(user) + "." + str(id_proyecto))
+    os.system("rm -rf " + REPOSITORY_INDEXES  + str(user) + "." + str(id_proyecto))
 
 def escribir_archivo_documentos(id_proyecto, user, articulosScholar, articulosScopus):
     lista = []
@@ -168,3 +174,49 @@ def escribir_archivo_documentos(id_proyecto, user, articulosScholar, articulosSc
     for pdf in lista:
         if pdf is not None:
             pdfs.write(pdf + '\n')
+
+#funciones para los script
+
+def dict_to_xml(tag, d):
+    '''
+    Turn a simple dict of key/value pairs into XML
+    '''
+    tag = tag.replace('__', '-').replace('_', ':')
+    elem = ET.Element(tag)
+    for key, val in d.items():
+        key = key.replace('__', '-').replace('_', ':')
+        child = ET.Element(key)
+        child.text = unicode(str(val), "utf-8") if val else ''
+        elem.append(child)
+    return elem
+
+def paperToXML(paper):
+    entry = ET.Element("entry")
+    for key in paper:
+        xml_key = key.replace('__', '-')
+        xml_key = xml_key.replace('_', ':')
+        if key == 'affiliation':
+            elem = dict_to_xml(xml_key, paper[key])
+            entry.append(elem)
+            continue
+        if key == 'authors':
+            for author in paper[key]:
+                elem = dict_to_xml('author', author)
+                entry.append(elem)
+            continue
+        ET.SubElement(entry, xml_key).text = unicode(str(paper[key]), "utf-8") if paper[key] else ''
+    return entry
+
+def papersToXML(papers):
+    root = ET.Element("search-results")
+    root.set('xmlns', 'http://www.w3.org/2005/Atom')
+    root.set('xmlns:cto', 'http://www.elsevier.com/xml/cto/dtd')
+    root.set('xmlns:atom', 'http://www.w3.org/2005/Atom')
+    root.set('xmlns:prism', 'http://prismstandard.org/namespaces/basic/2.0/')
+    root.set('xmlns:opensearch', 'http://a9.com/-/spec/opensearch/1.1/')
+    root.set('xmlns:dc', 'http://purl.org/dc/elements/1.1/')
+    for paper in papers:
+        root.append(paperToXML(paper))
+
+    return ET.tostring(root)
+    # ET.dump(root)

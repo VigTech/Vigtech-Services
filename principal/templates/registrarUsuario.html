@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Registrar Usuario</title>
-
-    
+    <title>Registro VigTech</title>
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
 
@@ -28,34 +24,96 @@
 
     <!-- Custom Fonts -->
     <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
    {% load bootstrap3 %}
-
  </head>
-
-<body style="background-color:white;">
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background:white;">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="{% url 'home' %}" style="margin: 0px; padding: 0px"><img src="{{STATIC_URL}}img/banner2.jpg"/>
-                <!--<h2 style="margin: 0px; padding: 0px" >Vigtech</h2>--></a>
+ <body style="background-color:white;">
+  <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background:white;">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{% url 'home' %}" style="margin: 0px; padding: 0px"><img src="{{STATIC_URL}}img/banner2.jpg"/></a>
+    </div>
+  </nav>
+  <div class="page-wrapper" style="margin-left:50px; margin-right:50px; background-color:white;">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="register-panel panel panel-primary">              
+          <div class="panel-body">                        
+            <b>VigTech Registro de usuario</b>
+            <hr/>                    
+            <form method="POST">
+              <div class="alert alert-danger " id="diverror" style="display:none;"></div>
+              {% csrf_token %}
+              {% bootstrap_form form layout='horizontal' form_group_class='form-group' %}
+          </div>
+          <div class="panel-footer"> 
+            <div class=text-right>
+              <a  href="{% url 'login' %}" type="submit" class="btn btn-sm btn-grey">Cancelar</a>
+              <button type="submit" class="btn btn-sm btn-primary">Registrar cuenta en Vigtech</button>
             </div>
-    </nav>
+            <hr/>
+            <h6>Se verifica que tu nombre de usuario no este registrado, si necesitas ayuda <b><a href="">escribenos</a></b>. Una vez termines el registro puedes acceder</h6>
+          </div>
+          </form>          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.js" ></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js" ></script>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+    // $("#diverror").hide();  
+    $("#id_email").change(function(){
+      console.log("verificando correo");
+      var re = /\S+@\S+\.\S+/;
+        if(!re.test($("#id_email").val())){
+            $('#diverror').html("<center>Este <b>"+$("#id_email").val()+"</b> no es un correo valido</center>");
+            $('#diverror').show("slow").delay(3000);
+      }else{
+        $('#diverror').hide();
+        $("#id_email").val($("#id_email").val().toLowerCase());
+      }
+    });
 
-	<div class="page-wrapper" style="margin-left:50px; margin-right:50px; background-color:white;">
-		<div class="row">
-			<div class="col-lg-12">
-            	<h1 class="page-header"><i class="fa fa-user">Crear Usuario</i></h1>
+    $("#id_password1").change(function(){
+        console.log("verificando contrasena");
+        var valid_password = /^([1-zA-Z0-1@.\s]{1,255})$/;
+        var password = $("#password").val();
+        if (valid_password.test(password) == false){
+            $('#diverror').html("<center>Su contraseña tiene caracteres invalidos</center>");
+            $('#diverror').show("slow").delay(3000);
+        }else{
+            $("#diverror").hide("slow");
+        }
+        console.log("verificando contrasena check");
+        var password = $("#id_password1").val();
+        var password_check = $("#id_password2").val();
+        if (password != password_check){
+            $('#diverror').html("<center>Las contraseñas no coinciden</center>");
+            $('#diverror').show("slow").delay(3000);
+        }else{
+            $("#diverror").hide("slow");
+        }   
+    });
 
-        	</div>
-        	<div class="col-md-4">
-	        	<form method="POST">
-	        		{% csrf_token %}
-	        		{% bootstrap_form form  %}
-	        	<input type="submit" class="btn btn-primary" value="Guardar Usuario"/>
-				</form>
-			</div>
-		</div>
-	</div>
+    $("#id_password2").change(function(){
+        console.log("verificando contrasena check");
+        var password = $("#id_password1").val();
+        var password_check = $("#id_password2").val();
+        if (password != password_check){
+            $('#diverror').html("<center>Las contraseñas no coinciden</center>");
+            $('#diverror').show("slow").delay(3000);
+        }else{
+            $("#diverror").hide("slow");
+        }
+    }); 
+    $("#id_username").change(function(){
+      $("#id_username").val($("#id_username").val().toLowerCase());
 
+  });
+
+});
+</script>    
 </body>
 </html>

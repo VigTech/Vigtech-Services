@@ -9,8 +9,6 @@ def get_metadatos(xml):
 	tree = ET.parse(xml)
 	root = tree.getroot()
 	papers = []
-		#print root.tag
-	
 	papers=[]
 	for node in tree.findall('{http://www.w3.org/2005/Atom}entry'):
 		node.tag
@@ -18,31 +16,25 @@ def get_metadatos(xml):
 		link=node.find('{http://www.w3.org/2005/Atom}link')
 		if link.get("title") == 'doi':
 			doi= extraer_doi(link.get('href'))
-				#print doi
 		else:
-			doi = '00000'
+			doi = ''
 		if link.get('title') == 'pdf':
 			linktext=link.get('href')
 		else:
 			linktext=""
-				#print doi
 		partsid=node.find("{http://www.w3.org/2005/Atom}id").text.split("/")
 		id = partsid[len(partsid)-1]
-			#print id
 		titulo=node.find("{http://www.w3.org/2005/Atom}title").text
 		titulo = titulo.replace("'","''")
 		fecha =node.find("{http://www.w3.org/2005/Atom}published").text[0:10]
-			#print fecha
-			#doi=node.find("{http://www.w3.org/2005/Atom}arxiv:doi").text
+		#doi=node.find("{http://www.w3.org/2005/Atom}arxiv:doi").text
 		abstract=node.find("{http://www.w3.org/2005/Atom}summary").text
 		abstract = abstract.replace("'","''")
 		for autor in node.findall('{http://www.w3.org/2005/Atom}author'):
 			for name in autor.iter('{http://www.w3.org/2005/Atom}name'):
 				autores.append(name.text)
 		paper={"doi":str(doi),"fecha":str(fecha),"id":str(id),"titulo":str(titulo), "abstract":str(abstract), 'autores': autores, "link":linktext}
-			#print autores
 		papers.append(paper)
-		#print papers
 	return papers
 		
 def insertar_metadatos_bd(xml,proyecto):
@@ -56,6 +48,7 @@ def extraer_doi(link):
 	values = link.split(".org")
 	#print values
 	doi = values[1][1:]
+	doi .replace("/", ".")
 	return doi 
 #arxiv = Arxiv("camicasi", "1")
 

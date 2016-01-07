@@ -30,15 +30,15 @@
     <!-- Custom Fonts -->
     <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> 
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> 
 	
 	<!-- load D3js -->
-	<script src="http://www.d3plus.org/js/d3.js"></script>
- 
+    <script src="http://www.d3plus.org/js/d3.js"></script> 
+     
 	<!-- load D3plus after D3js -->
-	<script src="http://www.d3plus.org/js/d3plus.js"></script>
+    <script src="http://www.d3plus.org/js/d3plus.js"></script> 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -61,20 +61,32 @@
                 <a class="navbar-brand" href="{% url 'home' %}" style="margin: 0px; padding: 0px"><img src="{{STATIC_URL}}img/banner2.jpg"/>
                 <!--<h2 style="margin: 0px; padding: 0px" >Vigtech</h2>--></a>
             </div>
-
                 <ul class="nav navbar-top-links navbar-right">
-
+                   <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i  id="list-current-project"  class="fa fa-list-alt fa-fw"></i><span id="textselect">{{mproyecto.nombre}}</span><i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul id="dprojectlist" class="dropdown-menu dropdown-user" style="float:right;">
+                            {% for proyecto in proyectos_user%}
+                                {% if mproyecto.nombre != proyecto.nombre %}
+                                <li><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}"><i class="fa fa-square-o fa-fw"></i>{{proyecto.nombre}}</a></li>
+                                {% elif mproyecto.nombre == proyecto.nombre%}
+                                <li><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}"><i class="fa fa-check-square-o fa-fw"></i>{{proyecto.nombre}}</a></li>
+                                {% endif %}
+                            {% endfor %}    
+                        </ul>
+                        
+                    <!-- /.dropdown-user -->
+                    </li> 					
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-user fa-fw"></i> {{user.username}} <i class="fa fa-caret-down"></i>
                         </a>
-
                         <ul class="dropdown-menu dropdown-user" style="float:right;">
-                            <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
-                            </li>
-                            <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                            </li>
-                            -->
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a></li>
+                            {% if  user.is_superuser == True %}
+                            <li><a href="{% url 'configurar_permisos' %}"><i class="fa fa-gear fa-fw"></i> Configuración </a></li>    
+                            {% endif %}
                             <li class="divider"></li>
                             <!-- Logout...Mandar a  Login-->
                             <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -82,47 +94,45 @@
                         </ul>
                     <!-- /.dropdown-user -->
                     </li> 
-
-
                 </ul>
             
         <!-- Panel izquierdo de navegacion-->
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="menu">
+                    <ul class="nav" id="navmenu">
                         <li class="activate">
                             <!-- Panel principal de trabajo -->
-                            <a class="active" href="{% url 'home' %}"><i class="fa fa-dashboard fa-fw"></i> Principal</a>
+                            <a href="{% url 'home' %}"><i class="glyphicon glyphicon-dashboard"></i> Principal</a>
                         </li>
+                        <li >                            
+                            <a href="#"><i class="glyphicon glyphicon-tasks"></i> Gestión de Proyectos <span class="fa arrow"></span></a>
 
-                        <li >
-                            
-                            <a href="#"><i class="fa fa-briefcase fa-fw"></i> Gestión de Proyectos <span class="fa arrow"></span></a>
-                            <!-- Nuevos Items desplegables -->
-                            <!--<ul class="nav nav-second-level" >-->
-                            <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
-                            
-                                <li><a href="{% url 'crear_proyecto' %}"><i class="fa fa-plus-square-o fa-fw"></i>Crear Proyecto</a></li>
-                                
-                                <li><a href="{% url 'ver_mis_proyectos'%}"><i class="fa fa-list-ul fa-fw"></i>Mis Proyectos</a></li>
-                                <li><a href="{% url 'ver_otros_proyectos'%}"><i class="fa fa-ellipsis-h fa-fw"></i>Otros Proyectos</a></li>
+                            <!-- <ul class="collapse-in nav nav-second-level" area-expanded="false" style=""> -->
+
+                            <ul class="nav nav-second-level">
+                                <li><a href="{% url 'crear_proyecto' %}"><i class="fa fa-cubes fa-fw"></i> Crear Proyecto </a></li>
+                                <li><a href="{% url 'ver_mis_proyectos'%}"><i class="fa fa-list-ol fa-fw"></i> Mis Proyectos</a></li>
+                                <li><a href="{% url 'ver_otros_proyectos'%}"><i class="fa fa-bars fa-fw"></i> Otros Proyectos</a></li>
                                 
                             </ul>
                             
                         </li>
                         <!-- Aprendizaje de maquina -->
                         <li class=""> 
-                             <a href="{% url 'busqueda_navegacion'%}"><i class="fa fa-globe fa-fw"></i> Búsqueda y Navegación</a>
+                             <a href="{% url 'busqueda_navegacion'%}"><i class="fa fa-search fa-fw"></i> Búsqueda y Navegación</a>
                         </li>
                          <li>
 
-                            <a href="#"><i class="fa fa-cube  fa-fw"></i>Estadísticas</a>
+                            <a href="#"><i class="fa fa-bar-chart-o  fa-fw"></i> Estadísticas <span class="fa arrow"></span></a>
                             <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
+                                 {% if lista_permisos.indicadores  == 1 %} 
                                 <li>
                                     <a href="{%url 'indicadores'%}"><i class="fa fa-cube  fa-fw"></i>Indicadores básicos</a>
                                 </li>
+                                {% endif %}
+                                {% if lista_permisos.graficos_barra  == 1 %} 
                                 <li>
-                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de barra</a>
+                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de barra <span class="fa arrow"></span></a>
                                     <ul class="collapse-in nav nav-third-level" area-expanded="true" style="">
                                     <li> <a href="{% url 'analisis_paises'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Paises</a></li>
                                     <li> <a href="{% url 'analisis_autores'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Autores</a></li>
@@ -132,8 +142,10 @@
                                      <li> <a href="{% url 'analisis_tipodocs'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Tipo de Documento</a></li>
                                  </ul>
                                 </li>
+                                 {% endif %}
+                                {% if lista_permisos.graficos_pie  == 1 %} 
                                 <li>
-                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de pie</a>
+                                    <a href="#"><i class="fa fa-cube  fa-fw"></i>Gráficos de pie <span class="fa arrow"></span></a>
                                     <ul class="collapse-in nav nav-third-level" area-expanded="true" style="">
                                      <li> <a href="{% url 'analisis_paisespie'%}"><i class="fa fa-bar-chart-o fa-fw"></i>Paises</a></li>
                                     
@@ -145,27 +157,36 @@
 
                                  </ul>
                                 </li>
+                             {% endif %}
                             </ul>
 
                         </li>
                         <li class="">
-                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Análisis</a>
+                             <a href="#"><i class="fa fa-th-large fa-fw"></i> Análisis</a>
                              <ul class="collapse-in nav nav-second-level" area-expanded="true" style="">
+                                  {% if lista_permisos.coautoria  == 1 %} 
                                 <li>
                                     <a href="{% url 'coautoria2' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria</a>
                                 </li>
+                                 {% endif %}
+                                  {% if lista_permisos.coautoria_medidas  == 1 %}  
                                 <li>
                                     <a href="{% url 'coautoria1' %}"><i class="fa fa-cube  fa-fw"></i>Coautoria con medidas</a>
                                 </li>
+                                     {% endif %}   
+                                       {% if lista_permisos.clustering  == 1 %} 
                                 <li>
                                     <a href="{% url 'clustering' %}"><i class="fa fa-cube  fa-fw"></i>Clustering</a>
                                 </li>
+                                  {% endif %}
                              </ul>
                              
                         </li>
+                         {% if lista_permisos.clasificacion_eisc  == 1 %} 
                         <li>
-                           <a href="{%url 'eisc' %}"><i class="fa fa-bar-chart-o fa-fw"></i>Clasificación EISC</a> 
+                           <a href="{%url 'eisc' %}"><i class="fa fa-database fa-fw"></i>Clasificación EISC</a> 
                         </li>
+                          {% endif %}
                        
                     </ul>
                 </div>
@@ -179,15 +200,14 @@
         </div>
 
     </div>
-
-
-
     <script src="{{STATIC_URL}}js/jquery.js"></script>
     <!--<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>-->
      <script src="{{STATIC_URL}}/lib/jquery-mobile/jquery-2.1.1.min.js"></script>
+     
+	<!-- ESTE CODIGO ES PARA LOS EVENTOS  *JAPeTo* -->
+     <script src="{{STATIC_URL}}js/jproject.js"></script>
         
-    
-    
+
     <script src="{{STATIC_URL}}/lib/highcharts/highcharts.js"></script>
     <script src="{{STATIC_URL}}/lib/highcharts/exporting.js"></script>
 
@@ -200,16 +220,14 @@
     <script src="{{STATIC_URL}}/lib/d3/d3.min.js"></script>
     <script>
     $(function () {
-        // body...
-          $('#menu').metisMenu();
+          $('#navmenu').metisMenu();
     });
-
     </script>
 
         <!-- Morris Charts JavaScript -->
-    <!--<script src="{{STATIC_URL}}/plugins/morris/raphael.min.js"></script>-->
-   <!-- <script src="{{STATIC_URL}}js/plugins/morris/morris.min.js"></script>-->
-   <!-- <script src="{{STATIC_URL}}js/plugins/morris/morris-data.js"></script>-->
+    <script src="{{STATIC_URL}}js/plugins/morris/raphael.min.js"></script>
+    <script src="{{STATIC_URL}}js/plugins/morris/morris.min.js"></script>
+    <script src="{{STATIC_URL}}js/plugins/morris/morris-data.js"></script>
 
         <!-- Custom Theme JavaScript -->
     <script src="{{STATIC_URL}}js/sb-admin-2.js"></script>

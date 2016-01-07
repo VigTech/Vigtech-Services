@@ -1,73 +1,60 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 {% block contenido %}
-	<div class="page-wrapper">
-		<div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Mis proyectos</h1>
-            </div>
-                <!-- /.col-lg-12 -->
-        </div>
-		<div class ="row">
-			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-					</div>
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover" id="dataTables-example">
-								<thead>
-									<tr>
-                                        <th>Nombre</th>
-                                        <th>Funciones</th>
-                                                                                
-                                    </tr>
-
-								</thead>
-								<tbody>
-									{% for proyecto in proyectos%}
-										<tr>
-											<td width="15%"><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}">{{proyecto.nombre}}</a>
-
-                                            </td>
-                                            <td width="10%">
-                                                <btn class="btn btn-danger btn-sm" title="Eliminar Proyecto" onclick="location.href='{% url 'eliminar_proyecto' proyecto.id_proyecto %}'"'><span class="glyphicon glyphicon-remove-circle"></span></btn>
-
-                                                 </td>
-											
-										</tr>
-									{% endfor %}
-
-								</tbody>
-
-							</table>
-						</div>
+<div class="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Mis proyectos</h1>
+		</div>
+	</div>
+	<div class ="row">
+		<div class="col-lg-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					En esta pagina encuentras los proyectos que has creado, para poderlos revisar una vez mas.<br/>
+					Puedes <b>realizar nuevamente la busqueda, edita o elimina el proyecto</b>          
+				</div>
+				<div class="panel-body">
+					{% if messages %}
+					{% for message in messages %}
+					<div {% if message.tags == "success" %} class="alert alert-success"{% endif %}>{{ message }}</div>                            
+					{% endfor %}
+					{% endif %}   					
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+							<thead>
+								<tr>
+									<th>Nombre del proyecto</th>
+									<th>Descripcion</th>
+									<th>Acciones</th>
+									</tr>
+							</thead>
+							<tbody>
+								{% for proyecto in proyectos_user%}
+								<tr>
+									<td width="20%"><a href="{% url 'editar_proyecto' proyecto.id_proyecto%}">{{proyecto.nombre}}</a></td>
+									<td width="10%">{{proyecto.resumen}}</td>
+									<td width="10%">
+										<a class="btn btn-primary btn-sm" title="Actualizar Busqueda Proyecto" id="{{proyecto.id_proyecto}}" onclick="location.href=''">
+											<span class="glyphicon glyphicon-search"></span>
+										</a>												
+										<a class="btn btn-success btn-sm" title="Editar Proyecto" id="{{proyecto.id_proyecto}}" onclick="location.href='{% url 'editar_proyecto' proyecto.id_proyecto%}'">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>												
+										<a class="btn btn-danger btn-sm btndelete" title="Eliminar Proyecto" id="{{proyecto.id_proyecto}}" onclick="location.href='{% url 'eliminar_proyecto' proyecto.id_proyecto %}'">
+											<span class="glyphicon glyphicon-trash"></span>
+										</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
 		</div>
-    </div>
-    <script>
-    /*
-        function eliminar_proyecto(theurl) {
-      bootbox.dialog({
-        message:"¿Está seguro de que desea eliminar este proyecto?",
-        title:"Confirmar eliminar",
-        onEscape: function() {},
-        buttons: {
-          "Aceptar": {
-            className:'btn-danger',
-            callback: function(){
-              window.location = theurl;
-            },
-          },
-          'Cancelar':{
-            className:'btn-default'
-          }
-        }
-      })
-
-  }
-*/
-    </script>
+	</div>
+</div>
+<script>
+</script>
 {% endblock %}

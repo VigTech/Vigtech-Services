@@ -28,18 +28,16 @@ class UniqueUserEmailField(forms.EmailField):
 class FormularioRegistrarUsuario(UserCreationForm):
     nombres = forms.CharField(label="Nombres")
     apellidos = forms.CharField(label="Apellidos")
-    email = UniqueUserEmailField(label="Email", required=True)
-    #username=form.CharField(widget=forms.widget.TextInput, label="Nombre de usuario")
-    #pass1=forms.CharField(widget=forms.widget.PasswordInput,label="Contraseña")
-    #pass2=forms.CharField(widget=forms.widget.PasswordInput,label="Vuelva a escribir la contraseña")
+    email = UniqueUserEmailField(label="Email",help_text='Estos son tus datos personales.', required=True)
+    username=forms.CharField(label="Vigtech usuario",help_text='Con este nombre podras acceder a tu cuenta en Vigtech.',required=True)
+    email =forms.CharField(label="Correo",help_text='Escribe el correo donde pueda recibir actulizaciones sobre el VigTech.',required=True)
+    password1=forms.CharField(widget=forms.PasswordInput(),help_text='Tu contraseña debe tener mas de 8 caracteres.',label="Contraseña",required=True)
+    password2=forms.CharField(widget=forms.PasswordInput(),help_text='Escribe la misma contraseña para la verificacion',label="Confirmar Contraseña",required=True)
 
     class Meta:
         model = User
-        fields = ['nombres', 'apellidos', 'username', 'email', 'password1', 'password2']
-        #exclude=['username.help_text']
-        help_texts = {
-            'username': _('Help text'),
-        }
+        fields = ['username', 'password1', 'password2','nombres', 'apellidos', 'email']
+        help_texts = {}
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)

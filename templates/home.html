@@ -1,52 +1,48 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
-
 {% block contenido %}
-	<div class="row">
-		
-        <div class="col-lg-12">
-            <h1 class="page-header">Noticias</h1>
-        </div>
-    	<!-- /.col-lg-12 -->
-    	<div class="row">
-	    	<div class ="col-lg-4">
-		    	<div class="panel panel-primary">
-		    		<div class="panel-heading">
-		    			<!--Usuarios-->
-		    		</div>
-		    		<div class="panel-body">
-		    		</div>
-		    	</div>
-	    	</div>
-	    	<div class ="col-lg-4">
-		    	<div class="panel panel-primary">
-		    		<div class="panel-heading">
-		    			<!--Mejores proyectos -->
-		    		</div>
-		    		<div class="panel-body">
-		    		</div>
-		    	</div>
-	    	</div>
-	    	<div class ="col-lg-4">
-		    	<div class="panel panel-primary">
-		    		<div class="panel-heading">
-		    			<!--... -->
-		    		</div>
-		    		<div class="panel-body">
-		    		</div>
-		    	</div>
-	    	</div>
-	    </div>
+<!-- by JAPeTo -->
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="page-header">Bienvenido, <b>{{user.first_name}}</b>  </h4>
     </div>
-    <div class= "row">
-				<div class="col col-md-8">
-				
-					
-					<!--<img src="#">-->
-					
-						
-					
-				</div>
-		</div>	
-    
+</div>
+<div class="row">
+	<div class ="col-md-4">
+    	<div class="panel panel-primary">
+    		<div class="panel-heading">
+    			<i class="fa fa-th fa-fw"></i> MIS PROYECTOS
+    			<h6>Estos son los proyectos que has creado</h6>
+    		</div>
+    		<div class="panel-body">
+					{% for proyecto in proyectos_user%}
+						<a href="{% url 'editar_proyecto' proyecto.id_proyecto%}">
+							<i class="fa  fa-check fa-fw"></i><span id="{{proyecto.nombre}}">{{proyecto.nombre}}</span>
+						</a><br/>
+					{% endfor %}
+    		</div>
+    	</div>
+	</div>
+	<div class ="col-md-4">
+    	<div class="panel panel-green">
+    		<div class="panel-heading">
+    			<i class="fa fa-star fa-fw"></i> PROYECTOS DESTACADOS
+    			<h6>Estos son los proyectos con mayor cantidad de articulos obtenidos</h6>
+    		</div>
+    		<div class="panel-body">
+				<!-- {{name}} -->
+    		</div>
+    	</div>
+	</div>
+	<div class ="col-md-4">
+    	<div class="panel panel-red">
+    		<div class="panel-heading">
+    			<i class="fa fa-search-plus fa-fw"></i> BUSQUEDAS DE ESTA SEMANA
+    			<h6>Estos son los proyectos de esta semana</h6>
+    		</div>
+    		<div class="panel-body">
+    		</div>
+    	</div>
+	</div>
+</div>
 {% endblock%}

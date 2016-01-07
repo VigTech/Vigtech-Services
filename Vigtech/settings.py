@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from principal.parameters import *
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -22,10 +23,13 @@ SECRET_KEY = 'l!e-ob)i+sdu2$bq1rbjhvm_3afx8zr6s7_(-ici4r*dtee5)e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
-
+#cada vez que se acceda se actializa la db de la session
+SESSION_SAVE_EVERY_REQUEST=True
+# la cerrar el navegador muere la session
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 
@@ -60,16 +64,27 @@ WSGI_APPLICATION = 'Vigtech.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
+"""
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'docker',
-        'USER': 'docker',
-        'PASSWORD': 'docker',
-        'HOST':'localhost',
-        'PORT': '49153',
-    }
+ 'default': {
+     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+     'NAME': 'docker',
+     'USER': 'docker',
+     'PASSWORD': 'docker',
+     'HOST':'localhost',
+     'PORT': '49153',
+ }
+}
+"""
+DATABASES = {
+ 'default': {
+     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+     'NAME': DATABASE,
+     'USER': USER,
+     'PASSWORD': PASSWORD,
+     'HOST' :HOST,
+     'PORT': PORT,
+ }
 }
 
 TEMPLATE_DIRS = (
@@ -84,7 +99,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_collected')
 
 #Cambiar a la ruta del nuevo host
 #MEDIA_ROOT="/home/administrador/ManejoVigtech/media/"
-MEDIA_ROOT="/home/vigtech/shared/repository/"
+#MEDIA_ROOT="/home/japeto/shared/repository/"
+MEDIA_ROOT=  REPOSITORY_DIR
+
 #MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 MEDIA_URL = 'media/'
 

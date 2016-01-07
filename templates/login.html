@@ -1,82 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Login Vigtech</title>
-
-    
+    <title>Login Vigtech</title>    
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
-
     <!-- MetisMenu CSS -->
     <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/metisMenu/metisMenu.min.css">
-
      <!-- Timeline CSS -->
     <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/timeline.css">
-
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{STATIC_URL}}css/sb-admin-2.css">
-
     <!-- Morris Charts CSS -->
     <link rel="stylesheet" href="{{STATIC_URL}}css/plugins/morris.css">
-
     <!-- Custom Fonts -->
     <link href="{{STATIC_URL}}font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
    {% load bootstrap3 %}
-
  </head>
 	<body>
-		<!--<div id="page-wraper">-->
-			<div class="container">
-				{% if messages %}
-        		<div class="row">
-        			<div class="col-md-4 col-md-offset-4">
-        				{% for message in messages %}
-					    	<p{% if message.tags == "success" %} class="alert alert-success"{% endif %}>{{ message }}</p>
-					    {% endfor %}
-        			</div>
-        		</div>
-        		{% endif %}
-				<div  class="row">
-					<div class="col-md-4 col-md-offset-4">
-						<div class="login-panel panel panel-default">
-						    <div class="panel-heading">
-						  		<h3 class="panel-title"> Iniciar sesión:</h3>
-						    </div> 
-						    <div class="panel-body">
-								<form method="post" action="{% url 'login' %}" role="form" >
-									<fieldset>
-										
-				      					{% csrf_token %}
-				      					<input type="hidden" name="next" style="width:80%;" value="{{next}}"/>
-
-				      					{% bootstrap_form form  %}
-
-				      					<div class="login-buttons">
-				        					<button type="submit" class="btn btn-lg btn-success btn-block">
-				          					<!--<span class="glyphicon glyphicon-ok-circle"></span>-->
-				          					<i class="fa fa-sign-in">
-				          					Ingresar
-				          					</i>
-				        					</button>
-				      					</div>
-				      				</fieldset>
-			    				</form>
-		    				</div>
-		    				<div class="panel-footer">
-		    				<p align="right">¿No dispones de una cuenta Vigtech?</p>
-		    				<a href="{% url 'registrar_usuario' %}"><p align="right"><strong>Regístrate ahora</strong></p></a>
-		    				</div>
-						</div>
-					</div>
-				</div>
-			</div>
-	</body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background:white;">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'home' %}" style="margin: 0px; padding: 0px"><img src="{{STATIC_URL}}img/banner2.jpg"/>
+                <!--<h2 style="margin: 0px; padding: 0px" >Vigtech</h2>--></a>
+            </div>
+        </nav>		
+        <div class="container">
+            <div  class="row">
+               <div class="col-md-6 col-md-offset-3">
+                  <div class="login-panel panel panel-default">
+                      <form method="post" action="{% url 'login' %}" role="form" >
+                          <div class="panel-body">
+                              <b>Accede a VigTech<hr/></b>
+                              {% if messages %}
+                              {% for message in messages %}
+                              <div {% if message.tags == "success" %} class="alert alert-success"{% endif %}>{{ message }}</div>                            
+                              {% endfor %}
+                              {% endif %}                                  
+                              <fieldset>
+                                {% csrf_token %}
+                                <input type="hidden" name="next" style="width:90%;" value="{{next}}"/>
+                                {% bootstrap_form form  %}
+                            </div>
+                            <div class="panel-footer">
+                                <div class=text-right>
+                                    <a  href="{% url 'registrar_usuario' %}" type="submit" class="btn btn-sm btn-grey">Registra una cuenta</a>
+                                    <button type="submit" class="btn btn-sm btn-primary">Acceder</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>             
+    <script type="text/javascript">
+        $("label[for='id_username']").text("Nombre de usuario:");
+        $("label[for='id_password']").text("Contraseña:");
+        $("#id_username").attr("placeholder", "Escriba su nombre de usuario").blur();
+        $("#id_password").attr("placeholder", "Escriba su contraseña").blur();
+    </script>
+</body>
 </html>

@@ -1,10 +1,14 @@
-import psycopg2
 # -*- coding: utf-8 -*-
+import json
+import psycopg2
+from principal.parameters import *
+
 
 
 def run_query(query=''):
     #conn_string = "host='localhost' dbname='postgres' user='postgres' password='chucho'"
-    conn_string = "host='127.0.0.1' dbname='docker' user='docker' password='docker' port='49153'"
+    #conn_string = "host='127.0.0.1' dbname='docker' user='docker' password='docker' port='49153' client_encoding=UTF8"
+    conn_string = "host="+HOST+" dbname="+DATABASE+ " user="+USER+" password="+PASSWORD+" port="+PORT+" client_encoding=UTF8"
     conn = psycopg2.connect(conn_string) # Conectar a la base de datos
     #$conn.set_character_encoding('utf8')
     cursor = conn.cursor()         # Crear un cursor
@@ -47,7 +51,7 @@ def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto)
         id_revista = insert_returning_id(revista, 'revista', 'publicationName', 'titulo_revista', 'id',
                                          ['issn', 'titulo_revista', 'isbn'], ['issn', 'publicationName', 'isbn'])
 
-    print 'hola'
+    # print 'hola'
     id_paper = insert_returning_id(paper, 'paper', 'eid', 'eid', 'id', ['eid', 'titulo_paper', 'abstract','total_citaciones',
                                                                         'fecha','doi', 'link_source'],
                                    ['eid', 'title', 'description','citedby-count','coverDate','doi','linkScopus'])
@@ -88,12 +92,13 @@ def insertar_paper(paper, autores, revista, afiliaciones, keywords, id_proyecto)
     insert_relation('paper_proyecto', 'id_paper', 'id_proyecto', id_paper, id_proyecto)
 
     #print type(paper_query)
-    print id_paper
+    # print id_paper
 
 def insert_returning_id(dicci_tabla, nombre_tabla, identificador_xml, identificador_bd, id_retorno, campos_bd, campos_xml):
     lista_id_paper = select_id(id_retorno, nombre_tabla, identificador_bd, dicci_tabla[identificador_xml])
-    if lista_id_paper:
-        print 'denegado insert returning'
+    if lista_id_paper: 
+        # Si el auto ya existe en la BD  se le asigna un nuevo id
+        # print 'Asignando un nuevo ID  autor'
         id = lista_id_paper[0][0]
     else:
         string_campos = '%s,'*len(campos_bd)%tuple((campo for campo in campos_bd))
@@ -103,9 +108,9 @@ def insert_returning_id(dicci_tabla, nombre_tabla, identificador_xml, identifica
         #eliminar ultimo caracter por la coma
         string_valores = string_valores[:-1]
         paper_query = "INSERT INTO %s (%s) VALUES (%s) RETURNING %s;"%(nombre_tabla,string_campos, string_valores, id_retorno)
-        print paper_query
+        # print paper_query
         id = run_query(paper_query)[0][0]
-        print id
+        # print id
     return id
 
 def insert_relation(tabla, atrib_id1, atrib_id2, valor1, valor2):
@@ -115,6 +120,7 @@ def insert_relation(tabla, atrib_id1, atrib_id2, valor1, valor2):
 
 def select_id(id, tabla, atrib_id, valor):
     query = "SELECT %s FROM %s WHERE %s = '%s'"%(id,tabla, atrib_id, valor)
+    # print  query
     result = run_query(query)
     return result
 
@@ -125,7 +131,7 @@ def select_id2(tabla, atrib_id1, atrib_id2, valor1, valor2):
 
 def actualizar(titulos):
     for titulo in titulos:
-        query = "UPDATE paper SET descargo=TRUE WHERE titulo_paper='%s';"%(titulo)
+        query = "UPDATE paper SET descargo=TRUE WHERE titulo_paper='%s';"%(titulo.strip())
         run_query(query)
         #print 'Modificando descarg'
 
@@ -144,14 +150,35 @@ def buscar(datos, tabla_conjunto, campo):
     #query = 'SELECT titulo FROM paper WHERE ( campo LIKE %%s% OR campo LIKE %%s% OR campo LIKE %%s%) AND' \
     #        '( campo LIKE %%s% OR campo LIKE %%s% OR campo LIKE %%s%) AND (campo LIKE %%s%' \
     #        ''
-    print query
+    # print query
 
+def obtener_papers(id_proyecto):
+    query = "SELECT eid, nombre_autor FROM paper AS p, paper_autor, autor AS a, paper_proyecto AS pp WHERE a.id = autor_id AND paper_id = p.id AND pp.id_paper = paper_id AND pp.id_proyecto = '{}'".format(id_proyecto)
+    return run_query(query)
 
+def obtener_autores(id_proyecto):
+    '''Obtiene un diccionario que tiene como llave los autores y almacena la lista de los eid en los que ha participado
+    :param id_proyecto:
+    :return:
+    '''
+    autores = {}
+    papers_proyecto = obtener_papers(id_proyecto);
+    for paper in papers_proyecto:
+        autor = paper[1]
+        id = paper[0]
+        if(autores.get(autor) == None):
+            autores[autor] = []
+        if(not (id in autores[autor]) ):
+            autores[autor].append(id)
+    #print json.dumps(autores)
+    return json.dumps(autores)
 #print select()[1]
 #existe('paper','id', '1' )
 
 def main():
-    run_query('SELECT * FROM paper')
-    buscar([['ing','sist','comp'],['eng', 'sys', 'comp']], 'afiliacion', 'nombre')#,[],[],[]])
-
+    run_query(u'SELECT * FROM paper WHERE nombre="ò"')
+    #buscar([['ing','sist','comp'],['eng', 'sys', 'comp']], 'afiliacion', 'nombre')#,[],[],[]])
+    #obtener_papers(68)
+    len(obtener_autores(68))
 #main()
+

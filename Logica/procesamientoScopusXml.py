@@ -23,7 +23,7 @@ def obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor, 
             registrar_autores(campito,autores,etiquetas_autor,'{http://www.w3.org/2005/Atom}author')
             registrar_autores(campito,afiliaciones,etiquetas_afiliaciones,'{http://www.w3.org/2005/Atom}affiliation')
             #print campito.tag, campito.text, campito.attrib
-            print 'PAPER', paper
+            # print 'PAPER', paper
             respuesta.append(campito.text)
         #Dividir las keywords en su diccionario
         #print keys
@@ -61,7 +61,7 @@ def registrar(campito, paper, etiquetas_metadatos):
     etiquetas_metadatos: Lista con los tags de los metadatos que vamos a guardar'''
     for metadato in etiquetas_metadatos:
         if metadato == '{http://www.w3.org/2005/Atom}link':
-            print 'SIIIII'
+            # print 'SIIIII'
             revisar_links(campito,paper)
         else:
             nombre_meta = metadato.partition('}')[2]
@@ -77,18 +77,18 @@ def registrar(campito, paper, etiquetas_metadatos):
 def revisar_links(campito, paper):
 	try:
 		if campito.attrib != {}:
-			print 'ATRI', campito.attrib
-			print campito.attrib['href']
+			# print 'ATRI', campito.attrib
+			# print campito.attrib['href']
 			if campito.attrib['ref'] == 'scopus':
 				if(paper.get('linkScopus') == None):
 					paper['linkScopus'] = '00000'
 					paper['linkScopus'] = campito.attrib['href'].replace("'", " ").encode('utf-8')
 	except:
-		print 'problems'
+		print ""
 
 def dividir_diccionario_key(keywords, etiquetas):
     keys_respuesta = []
-    print 'hola', keywords
+    # print 'hola', keywords
     if keywords != {}:
         etiqueta_key = etiquetas[0].partition('}')[2]
         keys = keywords[etiqueta_key].split('|')
@@ -96,10 +96,6 @@ def dividir_diccionario_key(keywords, etiquetas):
         for key in keys:
             keys_respuesta.append({etiqueta_key:key.strip()})
     return keys_respuesta
-
-
-
-
 
 
 def xml_to_bd(xml, id_proyecto, eids_descargados):
@@ -120,6 +116,7 @@ def xml_to_bd(xml, id_proyecto, eids_descargados):
 
     #dividir_diccionario_key({"authkeywords":'Meta-language | Mobile robot | Programming environment | STEM'},etiquetas_keywords)
     obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor, etiquetas_afiliaciones, etiquetas_keywords, id_proyecto)
+    # print eids_descargados
     actualizar(eids_descargados)
     return 0
 

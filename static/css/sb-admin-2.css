@@ -5,7 +5,10 @@
  */
 
 body {
+/*
     background-color: #f8f8f8;
+*/
+    background-color: #FFF;
 }
 
 #wrapper {
@@ -148,19 +151,20 @@ body {
     transition: all .5s;
 }
 
-.btn-primary.btn-outline {
+
+.btn-primary .btn-outline {
     color: #428bca;
 }
 
-.btn-success.btn-outline {
+.btn-success .btn-outline {
     color: #5cb85c;
 }
 
-.btn-info.btn-outline {
+.btn-info .btn-outline {
     color: #5bc0de;
 }
 
-.btn-warning.btn-outline {
+.btn-warning .btn-outline {
     color: #f0ad4e;
 }
 
@@ -206,12 +210,15 @@ body {
 }
 
 .chat-panel .panel-body {
-    height: 350px;
+    height: 100px;
     overflow-y: scroll;
 }
 
 .login-panel {
-    margin-top: 25%;
+    margin-top: 10%;
+}
+.register-panel {
+    margin-top: 1%;
 }
 
 .flot-chart {
@@ -346,4 +353,28 @@ table.dataTable thead .sorting:after {
 
 .panel-yellow a:hover {
     color: #df8a13;
+}
+
+.message-success{
+    font-family: fontawesome;
+    color: #0F0;
+}
+.message-danger{
+    font-family: fontawesome;
+    color: #F00;
+}
+.message-text{
+    font-family: fontawesome;
+    color: #00F;
+}
+.checkbox {
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+.btn-grey {
+    /*font-family: fontawesome;*/
+    color: #000;
+    border: 1px solid #999;
+    border-radius: 2px;
 }

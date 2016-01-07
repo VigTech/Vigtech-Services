@@ -22,7 +22,7 @@ def obtener_metadatos(xml, etiquetas_paper, etiquetas_revista, etiquetas_autor, 
             registrar(campito, keys, etiquetas_keys)
             registrar_autores(campito,autores,etiquetas_autor,'{http://www.w3.org/2005/Atom}author')
             registrar_autores(campito,afiliaciones,etiquetas_afiliaciones,'{http://www.w3.org/2005/Atom}affiliation')
-            print campito.tag, campito.text
+            # print campito.tag, campito.text
             #print paper
             respuesta.append(campito.text)
         #Dividir las keywords en su diccionario
@@ -71,7 +71,7 @@ def registrar(campito, paper, etiquetas_metadatos):
 
 def dividir_diccionario_key(keywords, etiquetas):
     keys_respuesta = []
-    print 'hola', keywords
+    # print 'hola', keywords
     if keywords != {}:
         etiqueta_key = etiquetas[0].partition('}')[2]
         keys = keywords[etiqueta_key].split('|')
